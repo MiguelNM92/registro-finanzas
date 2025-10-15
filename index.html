@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro de Finanzas</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
+</head>
+<body>
+  <header>
+    <h1>Registro de Finanzas</h1>
+    <button id="addBtn">+ Añadir transacción</button>
+  </header>
+
+  <section id="summary">
+    <h2>Saldo total: $<span id="total">0.00</span></h2>
+  </section>
+
+  <section id="transactions">
+    <h3>Historial</h3>
+    <ul id="transactionList"></ul>
+  </section>
+
+  <div id="formContainer" class="hidden">
+    <form id="transactionForm">
+      <label>Tipo:
+        <select id="type">
+          <option value="deposit">Depósito</option>
+          <option value="expense">Gasto</option>
+        </select>
+      </label>
+      <label>Monto: <input type="number" id="amount" required /></label>
+      <label>Método de pago:
+        <select id="method">
+          <option value="Tarjeta">Tarjeta</option>
+          <option value="Efectivo">Efectivo</option>
+          <option value="Transferencia">Transferencia</option>
+        </select>
+      </label>
+      <label>Notas: <input type="text" id="note" /></label>
+      <button type="submit">Guardar</button>
+    </form>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
