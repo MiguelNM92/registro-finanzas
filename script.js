@@ -1,4 +1,5 @@
 let transactions = [];
+const presupuestoMensual = 5000;
 
 document.getElementById("addBtn").onclick = () => {
   document.getElementById("formContainer").classList.toggle("hidden");
@@ -9,9 +10,12 @@ document.getElementById("transactionForm").onsubmit = (e) => {
   const type = document.getElementById("type").value;
   const amount = parseFloat(document.getElementById("amount").value);
   const method = document.getElementById("method").value;
+  const category = document.getElementById("category").value;
+  const dateInput = document.getElementById("date").value;
   const note = document.getElementById("note").value;
+  const date = dateInput ? new Date(dateInput) : new Date();
 
-  transactions.push({ type, amount, method, note, date: new Date() });
+  transactions.push({ type, amount, method, category, note, date });
   updateUI();
   e.target.reset();
   document.getElementById("formContainer").classList.add("hidden");
@@ -28,14 +32,24 @@ function updateUI() {
     item.className = `transaction ${t.type}`;
     item.innerHTML = `
       <strong>${t.note || "Sin nota"}</strong> - ${t.method}<br/>
-      ${t.type === "deposit" ? "+" : "-"}$${t.amount.toFixed(2)} (${t.date.toLocaleDateString()})
+      ${t.category} • ${t.date.toLocaleDateString()}<br/>
+      ${t.type === "deposit" ? "+" : "-"}$${t.amount.toFixed(2)}
     `;
     list.appendChild(item);
     total += t.type === "deposit" ? t.amount : -t.amount;
   });
 
   document.getElementById("total").textContent = total.toFixed(2);
-  renderChart(); // Actualiza la gráfica
+
+  const gastosDelMes = transactions
+    .filter(t => t.type === "expense")
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  if (gastosDelMes > presupuestoMensual) {
+    alert("⚠️ Has superado tu presupuesto mensual de $" + presupuestoMensual);
+  }
+
+  renderChart();
 }
 
 function renderChart() {
@@ -49,7 +63,6 @@ function renderChart() {
 
   const ctx = document.getElementById("chart").getContext("2d");
 
-  // Destruir gráfica anterior si existe
   if (window.chartInstance) {
     window.chartInstance.destroy();
   }
