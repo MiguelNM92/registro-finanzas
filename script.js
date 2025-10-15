@@ -35,6 +35,47 @@ function updateUI() {
   });
 
   document.getElementById("total").textContent = total.toFixed(2);
+  renderChart(); // Actualiza la gráfica
+}
+
+function renderChart() {
+  const ingresos = transactions
+    .filter(t => t.type === "deposit")
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  const gastos = transactions
+    .filter(t => t.type === "expense")
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  const ctx = document.getElementById("chart").getContext("2d");
+
+  // Destruir gráfica anterior si existe
+  if (window.chartInstance) {
+    window.chartInstance.destroy();
+  }
+
+  window.chartInstance = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: ["Ingresos", "Gastos"],
+      datasets: [{
+        label: "Este mes",
+        data: [ingresos, gastos],
+        backgroundColor: ["#3b82f6", "#ef4444"]
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
 }
 
 window.onload = () => {
