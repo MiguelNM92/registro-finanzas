@@ -91,6 +91,23 @@ function renderChart() {
   });
 }
 
+document.getElementById("exportBtn").onclick = () => {
+  const data = transactions.map(t => ({
+    Fecha: new Date(t.date).toLocaleDateString(),
+    Tipo: t.type === "deposit" ? "Depósito" : "Gasto",
+    Monto: t.amount,
+    Método: t.method,
+    Categoría: t.category,
+    Nota: t.note
+  }));
+
+  const worksheet = XLSX.utils.json_to_sheet(data);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Transacciones");
+
+  XLSX.writeFile(workbook, "registro_finanzas.xlsx");
+};
+
 window.onload = () => {
   const saved = localStorage.getItem("transactions");
   if (saved) {
