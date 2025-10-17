@@ -10,7 +10,6 @@
 <body>
   <header>
     <h1>Registro de Finanzas</h1>
-    <button id="addBtn">+ Añadir transacción</button>
   </header>
 
   <section id="summary">
@@ -52,18 +51,24 @@
     <ul id="transactionList"></ul>
   </section>
 
-  <div id="formContainer" class="hidden">
+  <!-- Botón flotante -->
+  <button id="toggleFormBtn" class="floating-btn">＋</button>
+
+  <!-- Formulario flotante -->
+  <div id="floatingForm" class="floating-form hidden">
     <form id="transactionForm">
-      <label>Tipo:
+      <label>💼 Tipo:
         <select id="type">
           <option value="deposit">Depósito</option>
           <option value="expense">Gasto</option>
         </select>
       </label>
 
-      <label>Monto: <input type="number" id="amount" required /></label>
+      <label>💰 Monto:
+        <input type="number" id="amount" required />
+      </label>
 
-      <label>Método de pago:
+      <label>💳 Método de pago:
         <select id="method">
           <optgroup label="Tarjetas de crédito">
             <option value="Klar">Klar</option>
@@ -82,7 +87,7 @@
         </select>
       </label>
 
-      <label>Categoría:
+      <label>📂 Categoría:
         <select id="category">
           <option value="Comida">Comida</option>
           <option value="Transporte">Transporte</option>
@@ -92,11 +97,14 @@
         </select>
       </label>
 
-      <label>Fecha:
+      <label>📅 Fecha:
         <input type="date" id="date" />
       </label>
 
-      <label>Notas: <input type="text" id="note" /></label>
+      <label>📝 Nota:
+        <input type="text" id="note" />
+      </label>
+
       <button type="submit">Guardar</button>
     </form>
   </div>
@@ -105,62 +113,5 @@
   <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="script.js"></script>
-  <!-- Botón flotante -->
-<button id="toggleFormBtn" class="floating-btn">＋</button>
-
-<!-- Formulario flotante -->
-<div id="floatingForm" class="floating-form hidden">
-  <form id="transactionForm">
-    <label>💼 Tipo:
-      <select id="type">
-        <option value="deposit">Depósito</option>
-        <option value="expense">Gasto</option>
-      </select>
-    </label>
-
-    <label>💰 Monto:
-      <input type="number" id="amount" required />
-    </label>
-
-    <label>💳 Método de pago:
-      <select id="method">
-        <optgroup label="Tarjetas de crédito">
-          <option value="Klar">Klar</option>
-          <option value="PlataCard">PlataCard</option>
-          <option value="Bradescard">Bradescard</option>
-          <option value="Mercado Pago">Mercado Pago</option>
-        </optgroup>
-        <optgroup label="Tarjetas de débito">
-          <option value="Banorte">Banorte</option>
-          <option value="UpsiVale">UpsiVale</option>
-        </optgroup>
-        <optgroup label="Otros">
-          <option value="Efectivo">Efectivo</option>
-          <option value="Transferencia">Transferencia</option>
-        </optgroup>
-      </select>
-    </label>
-
-    <label>📂 Categoría:
-      <select id="category">
-        <option value="Comida">Comida</option>
-        <option value="Transporte">Transporte</option>
-        <option value="Entretenimiento">Entretenimiento</option>
-        <option value="Salud">Salud</option>
-        <option value="Otros">Otros</option>
-      </select>
-    </label>
-
-    <label>📅 Fecha:
-      <input type="date" id="date" />
-    </label>
-
-    <label>📝 Nota:
-      <input type="text" id="note" />
-    </label>
-
-    <button type="submit">Guardar</button>
-  </form>
-</div>
 </body>
 </html>
