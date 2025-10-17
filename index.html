@@ -27,6 +27,26 @@
     <p>Total de gastos en el periodo: $<span id="totalPeriodo">0.00</span></p>
   </section>
 
+  <section id="report">
+    <h3>Reporte mensual por categoría</h3>
+    <label>Selecciona mes:
+      <input type="month" id="monthSelector" />
+    </label>
+    <canvas id="categoryChart" width="400" height="200"></canvas>
+    <button id="exportPdfBtn">📄 Exportar reporte en PDF</button>
+  </section>
+
+  <section id="compare">
+    <h3>Comparativa entre meses</h3>
+    <label>Mes 1:
+      <input type="month" id="compareMonth1" />
+    </label>
+    <label>Mes 2:
+      <input type="month" id="compareMonth2" />
+    </label>
+    <canvas id="compareChart" width="400" height="200"></canvas>
+  </section>
+
   <section id="transactions">
     <h3>Historial</h3>
     <ul id="transactionList"></ul>
@@ -81,8 +101,9 @@
     </form>
   </div>
 
-  <script src="script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
