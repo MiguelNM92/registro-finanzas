@@ -13,60 +13,71 @@
     <h1>Registro de Finanzas</h1>
   </header>
 
-  <section id="formSection">
-    <h2>Registrar transacción</h2>
-    <form id="transactionForm">
-      <!-- Campos del formulario -->
-      <label>💼 Tipo:
-        <select id="type">
-          <option value="deposit">Depósito</option>
-          <option value="expense">Gasto</option>
-        </select>
-      </label>
-      <label>💰 Monto:
-        <input type="number" id="amount" required />
-      </label>
-      <label>💳 Método de pago:
-        <select id="method">
-          <optgroup label="Tarjetas de crédito">
-            <option value="Klar">Klar</option>
-            <option value="PlataCard">PlataCard</option>
-            <option value="Bradescard">Bradescard</option>
-            <option value="Mercado Pago">Mercado Pago</option>
-          </optgroup>
-          <optgroup label="Tarjetas de débito">
-            <option value="Banorte">Banorte</option>
-            <option value="UpsiVale">UpsiVale</option>
-          </optgroup>
-          <optgroup label="Otros">
-            <option value="Efectivo">Efectivo</option>
-            <option value="Transferencia">Transferencia</option>
-          </optgroup>
-        </select>
-      </label>
-      <label>📂 Categoría:
-        <select id="category">
-          <option value="Comida">Comida</option>
-          <option value="Transporte">Transporte</option>
-          <option value="Entretenimiento">Entretenimiento</option>
-          <option value="Salud">Salud</option>
-          <option value="Otros">Otros</option>
-        </select>
-      </label>
-      <label>📅 Fecha:
-        <input type="date" id="date" />
-      </label>
-      <label>📝 Nota:
-        <input type="text" id="note" />
-      </label>
-      <button type="submit">Guardar</button>
-    </form>
-  </section>
+  <main class="grid">
+    <section id="formSection">
+      <h2>Registrar transacción</h2>
+      <form id="transactionForm">
+        <label>💼 Tipo:
+          <select id="type">
+            <option value="deposit">Depósito</option>
+            <option value="expense">Gasto</option>
+          </select>
+        </label>
+        <label>💰 Monto:
+          <input type="number" id="amount" required />
+        </label>
+        <label>💳 Método de pago:
+          <select id="method">
+            <optgroup label="Tarjetas de crédito">
+              <option value="Klar">Klar</option>
+              <option value="PlataCard">PlataCard</option>
+              <option value="Bradescard">Bradescard</option>
+              <option value="Mercado Pago">Mercado Pago</option>
+            </optgroup>
+            <optgroup label="Tarjetas de débito">
+              <option value="Banorte">Banorte</option>
+              <option value="UpsiVale">UpsiVale</option>
+            </optgroup>
+            <optgroup label="Otros">
+              <option value="Efectivo">Efectivo</option>
+              <option value="Transferencia">Transferencia</option>
+            </optgroup>
+          </select>
+        </label>
+        <label>📂 Categoría:
+          <select id="category">
+            <option value="Comida">Comida</option>
+            <option value="Transporte">Transporte</option>
+            <option value="Entretenimiento">Entretenimiento</option>
+            <option value="Salud">Salud</option>
+            <option value="Otros">Otros</option>
+          </select>
+        </label>
+        <label>📅 Fecha:
+          <input type="date" id="date" />
+        </label>
+        <label>📝 Nota:
+          <input type="text" id="note" />
+        </label>
+        <button type="submit">Guardar</button>
+      </form>
+    </section>
+
+    <aside id="tarjetas">
+      <h3>Saldos por tarjeta</h3>
+      <ul id="saldosTarjetas"></ul>
+    </aside>
+  </main>
 
   <section id="summary">
     <h2>Saldo total: $<span id="total">0.00</span></h2>
     <canvas id="chart" width="400" height="200"></canvas>
     <button id="exportBtn">📤 Exportar a Excel</button>
+  </section>
+
+  <section id="barrasCredito">
+    <h3>Consumo de tarjetas de crédito</h3>
+    <div id="barrasContainer"></div>
   </section>
 
   <section id="filter">
@@ -79,37 +90,39 @@
 
   <section id="advancedFilter">
     <h3>Filtrar por categoría o método</h3>
-    <label>Categoría:
-      <select id="categoryFilter">
-        <option value="">-- Todas --</option>
-        <option value="Comida">Comida</option>
-        <option value="Transporte">Transporte</option>
-        <option value="Entretenimiento">Entretenimiento</option>
-        <option value="Salud">Salud</option>
-        <option value="Otros">Otros</option>
-      </select>
-    </label>
-    <label>Método de pago:
-      <select id="methodFilter">
-        <option value="">-- Todos --</option>
-        <option value="Klar">Klar</option>
-        <option value="PlataCard">PlataCard</option>
-        <option value="Bradescard">Bradescard</option>
-        <option value="Mercado Pago">Mercado Pago</option>
-        <option value="Banorte">Banorte</option>
-        <option value="UpsiVale">UpsiVale</option>
-        <option value="Efectivo">Efectivo</option>
-        <option value="Transferencia">Transferencia</option>
-      </select>
-    </label>
+    <div class="filtrosHorizontales">
+      <label>Categoría:
+        <select id="categoryFilter">
+          <option value="">-- Todas --</option>
+          <option value="Comida">Comida</option>
+          <option value="Transporte">Transporte</option>
+          <option value="Entretenimiento">Entretenimiento</option>
+          <option value="Salud">Salud</option>
+          <option value="Otros">Otros</option>
+        </select>
+      </label>
+      <label>Método de pago:
+        <select id="methodFilter">
+          <option value="">-- Todos --</option>
+          <option value="Klar">Klar</option>
+          <option value="PlataCard">PlataCard</option>
+          <option value="Bradescard">Bradescard</option>
+          <option value="Mercado Pago">Mercado Pago</option>
+          <option value="Banorte">Banorte</option>
+          <option value="UpsiVale">UpsiVale</option>
+          <option value="Efectivo">Efectivo</option>
+          <option value="Transferencia">Transferencia</option>
+        </select>
+      </label>
+    </div>
     <p>Total filtrado: $<span id="totalFiltrado">0.00</span></p>
   </section>
 
-  <section id="transactions">
-    <h3>Historial</h3>
+  <details id="transactions">
+    <summary><h3>Historial de transacciones</h3></summary>
     <ul id="transactionList"></ul>
     <button id="clearBtn">🧹 Limpiar historial</button>
-  </section>
+  </details>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
