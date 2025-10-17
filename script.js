@@ -98,89 +98,24 @@ function updateUI() {
   setTimeout(() => confirm.remove(), 2000);
 }
 
-function renderChart() {
-  const ingresos = transactions
-    .filter(t => t.type === "deposit")
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  const gastos = transactions
-    .filter(t => t.type === "expense")
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  const ctx = document.getElementById("chart").getContext("2d");
-
-  if (window.chartInstance) {
-    window.chartInstance.destroy();
+document.getElementById("clearBtn").onclick = () => {
+  const confirmClear = confirm("¿Estás seguro de que quieres borrar todas las transacciones?");
+  if (confirmClear) {
+    transactions = [];
+    localStorage.removeItem("transactions");
+    updateUI();
+    alert("🧹 Historial borrado correctamente.");
   }
+};
 
-  window.chartInstance = new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: ["Ingresos", "Gastos"],
-      datasets: [{
-        label: "Este mes",
-        data: [ingresos, gastos],
-        backgroundColor: ["#3b82f6", "#ef4444"]
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false }
-      },
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
+window.onload = () => {
+  const saved = localStorage.getItem("transactions");
+  if (saved) {
+    try {
+      transactions = JSON.parse(saved);
+      updateUI();
+    } catch (error) {
+      console.error("Error al cargar transacciones:", error);
     }
-  });
-}
-
-document.getElementById("exportBtn").onclick = () => {
-  const data = transactions.map(t => ({
-    Fecha: new Date(t.date).toLocaleDateString(),
-    Tipo: t.type === "deposit" ? "Depósito" : "Gasto",
-    Monto: t.amount,
-    Método: t.method,
-    Categoría: t.category,
-    Nota: t.note,
-    Periodo: t.periodo || ""
-  }));
-
-  const worksheet = XLSX.utils.json_to_sheet(data);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Transacciones");
-
-  XLSX.writeFile(workbook, "registro_finanzas.xlsx");
+  }
 };
-
-function actualizarSelectorPeriodos() {
-  const selector = document.getElementById("periodSelector");
-  const periodosUnicos = [...new Set(transactions.map(t => t.periodo).filter(p => p))];
-  selector.innerHTML = `<option value="">-- Selecciona un periodo --</option>`;
-  periodosUnicos.forEach(p => {
-    const option = document.createElement("option");
-    option.value = p;
-    option.textContent = p;
-    selector.appendChild(option);
-  });
-}
-
-document.getElementById("periodSelector").onchange = () => {
-  const periodo = document.getElementById("periodSelector").value;
-  const gastos = transactions
-    .filter(t => t.periodo === periodo && t.type === "expense")
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  document.getElementById("totalPeriodo").textContent = gastos.toFixed(2);
-};
-
-document.getElementById("monthSelector").onchange = () => {
-  const selected = document.getElementById("monthSelector").value;
-  if (!selected) return;
-
-  const [year, month] = selected.split("-").map(Number);
-  const gastosPorCategoria = {};
-
-  transactions.for
