@@ -236,3 +236,14 @@ function compararMeses() {
   const datosMes2 = categorias.map(cat => resumen[`${m2}-${cat}`] || 0);
 
   const ctx = document.getElementById("compareChart").getContext("2d");
+  if (window.compareChartInstance) {
+    window.compareChartInstance.destroy();
+  }
+
+  window.compareChartInstance = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: categorias,
+      datasets: [
+        {
+          label: `Gastos ${m1}`,
