@@ -86,6 +86,7 @@ function updateUI() {
 
   renderChart();
   actualizarSelectorPeriodos();
+  aplicarFiltros();
 
   const confirm = document.createElement("div");
   confirm.textContent = "✅ Transacción guardada";
@@ -132,3 +133,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
+document.getElementById("categoryFilter").onchange = aplicarFiltros;
+document.getElementById("methodFilter").onchange = aplicarFiltros;
+
+function aplicarFiltros() {
+  const categoria = document.getElementById("categoryFilter").value;
+  const metodo = document.getElementById("methodFilter").value;
+
+  const filtradas = transactions.filter(t => {
+    const coincideCategoria = categoria ? t.category === categoria : true;
+    const coincideMetodo = metodo ? t.method === metodo : true;
+    return coincideCategoria && coincideMetodo;
+  });
+
+  const total = filtradas.reduce((sum, t) => {
+    return t.type === "deposit" ? sum + t.amount : sum - t.amount;
+  }, 0);
+
+  document.getElementById("totalFiltrado").textContent = total.toFixed(2);
+}
