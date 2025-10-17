@@ -12,48 +12,9 @@
     <h1>Registro de Finanzas</h1>
   </header>
 
-  <section id="summary">
-    <h2>Saldo total: $<span id="total">0.00</span></h2>
-    <canvas id="chart" width="400" height="200"></canvas>
-    <button id="exportBtn">📤 Exportar a Excel</button>
-  </section>
-
-  <section id="filter">
-    <h3>Filtrar por periodo de corte</h3>
-    <select id="periodSelector">
-      <option value="">-- Selecciona un periodo --</option>
-    </select>
-    <p>Total de gastos en el periodo: $<span id="totalPeriodo">0.00</span></p>
-  </section>
-
-  <section id="report">
-    <h3>Reporte mensual por categoría</h3>
-    <label>Selecciona mes:
-      <input type="month" id="monthSelector" />
-    </label>
-    <canvas id="categoryChart" width="400" height="200"></canvas>
-    <button id="exportPdfBtn">📄 Exportar reporte en PDF</button>
-  </section>
-
-  <section id="compare">
-    <h3>Comparativa entre meses</h3>
-    <label>Mes 1:
-      <input type="month" id="compareMonth1" />
-    </label>
-    <label>Mes 2:
-      <input type="month" id="compareMonth2" />
-    </label>
-    <canvas id="compareChart" width="400" height="200"></canvas>
-  </section>
-
-  <section id="transactions">
-    <h3>Historial</h3>
-    <ul id="transactionList"></ul>
-  </section>
-
-  <button id="toggleFormBtn" class="floating-btn">＋</button>
-
-  <div id="floatingForm" class="floating-form hidden">
+  <!-- Formulario siempre visible -->
+  <section id="formSection">
+    <h2>Registrar transacción</h2>
     <form id="transactionForm">
       <label>💼 Tipo:
         <select id="type">
@@ -105,7 +66,46 @@
 
       <button type="submit">Guardar</button>
     </form>
-  </div>
+  </section>
+
+  <section id="summary">
+    <h2>Saldo total: $<span id="total">0.00</span></h2>
+    <canvas id="chart" width="400" height="200"></canvas>
+    <button id="exportBtn">📤 Exportar a Excel</button>
+  </section>
+
+  <section id="filter">
+    <h3>Filtrar por periodo de corte</h3>
+    <select id="periodSelector">
+      <option value="">-- Selecciona un periodo --</option>
+    </select>
+    <p>Total de gastos en el periodo: $<span id="totalPeriodo">0.00</span></p>
+  </section>
+
+  <section id="report">
+    <h3>Reporte mensual por categoría</h3>
+    <label>Selecciona mes:
+      <input type="month" id="monthSelector" />
+    </label>
+    <canvas id="categoryChart" width="400" height="200"></canvas>
+    <button id="exportPdfBtn">📄 Exportar reporte en PDF</button>
+  </section>
+
+  <section id="compare">
+    <h3>Comparativa entre meses</h3>
+    <label>Mes 1:
+      <input type="month" id="compareMonth1" />
+    </label>
+    <label>Mes 2:
+      <input type="month" id="compareMonth2" />
+    </label>
+    <canvas id="compareChart" width="400" height="200"></canvas>
+  </section>
+
+  <section id="transactions">
+    <h3>Historial</h3>
+    <ul id="transactionList"></ul>
+  </section>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
