@@ -9,23 +9,23 @@
 </head>
 <body>
   <header>
+    <img src="logo.png" alt="Logo" id="logo" />
     <h1>Registro de Finanzas</h1>
   </header>
 
   <section id="formSection">
     <h2>Registrar transacción</h2>
     <form id="transactionForm">
+      <!-- Campos del formulario -->
       <label>💼 Tipo:
         <select id="type">
           <option value="deposit">Depósito</option>
           <option value="expense">Gasto</option>
         </select>
       </label>
-
       <label>💰 Monto:
         <input type="number" id="amount" required />
       </label>
-
       <label>💳 Método de pago:
         <select id="method">
           <optgroup label="Tarjetas de crédito">
@@ -44,7 +44,6 @@
           </optgroup>
         </select>
       </label>
-
       <label>📂 Categoría:
         <select id="category">
           <option value="Comida">Comida</option>
@@ -54,15 +53,12 @@
           <option value="Otros">Otros</option>
         </select>
       </label>
-
       <label>📅 Fecha:
         <input type="date" id="date" />
       </label>
-
       <label>📝 Nota:
         <input type="text" id="note" />
       </label>
-
       <button type="submit">Guardar</button>
     </form>
   </section>
@@ -81,24 +77,32 @@
     <p>Total de gastos en el periodo: $<span id="totalPeriodo">0.00</span></p>
   </section>
 
-  <section id="report">
-    <h3>Reporte mensual por categoría</h3>
-    <label>Selecciona mes:
-      <input type="month" id="monthSelector" />
+  <section id="advancedFilter">
+    <h3>Filtrar por categoría o método</h3>
+    <label>Categoría:
+      <select id="categoryFilter">
+        <option value="">-- Todas --</option>
+        <option value="Comida">Comida</option>
+        <option value="Transporte">Transporte</option>
+        <option value="Entretenimiento">Entretenimiento</option>
+        <option value="Salud">Salud</option>
+        <option value="Otros">Otros</option>
+      </select>
     </label>
-    <canvas id="categoryChart" width="400" height="200"></canvas>
-    <button id="exportPdfBtn">📄 Exportar reporte en PDF</button>
-  </section>
-
-  <section id="compare">
-    <h3>Comparativa entre meses</h3>
-    <label>Mes 1:
-      <input type="month" id="compareMonth1" />
+    <label>Método de pago:
+      <select id="methodFilter">
+        <option value="">-- Todos --</option>
+        <option value="Klar">Klar</option>
+        <option value="PlataCard">PlataCard</option>
+        <option value="Bradescard">Bradescard</option>
+        <option value="Mercado Pago">Mercado Pago</option>
+        <option value="Banorte">Banorte</option>
+        <option value="UpsiVale">UpsiVale</option>
+        <option value="Efectivo">Efectivo</option>
+        <option value="Transferencia">Transferencia</option>
+      </select>
     </label>
-    <label>Mes 2:
-      <input type="month" id="compareMonth2" />
-    </label>
-    <canvas id="compareChart" width="400" height="200"></canvas>
+    <p>Total filtrado: $<span id="totalFiltrado">0.00</span></p>
   </section>
 
   <section id="transactions">
