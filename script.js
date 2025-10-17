@@ -1,6 +1,13 @@
 let transactions = [];
 const presupuestoMensual = 5000;
 
+const fechasCorte = {
+  "Klar": 26,
+  "Bradescard": 10,
+  "PlataCard": 17,
+  "Mercado Pago": 7
+};
+
 document.getElementById("addBtn").onclick = () => {
   document.getElementById("formContainer").classList.toggle("hidden");
 };
@@ -15,11 +22,32 @@ document.getElementById("transactionForm").onsubmit = (e) => {
   const note = document.getElementById("note").value;
   const date = dateInput ? new Date(dateInput) : new Date();
 
-  transactions.push({ type, amount, method, category, note, date });
+  let periodo = null;
+  if (fechasCorte[method]) {
+    periodo = obtenerPeriodoCorte(date, method);
+  }
+
+  transactions.push({ type, amount, method, category, note, date, periodo });
   updateUI();
   e.target.reset();
   document.getElementById("formContainer").classList.add("hidden");
 };
+
+function obtenerPeriodoCorte(fecha, tarjeta) {
+  const diaCorte = fechasCorte[tarjeta];
+  const f = new Date(fecha);
+  const año = f.getFullYear();
+  const mes = f.getMonth();
+
+  if (f.getDate() <= diaCorte) {
+    return `${año}-${String(mes + 1).padStart(2, '0')}`;
+  } else {
+    const siguienteMes = mes + 1;
+    const añoFinal = siguienteMes > 11 ? año + 1 : año;
+    const mesFinal = siguienteMes % 12;
+    return `${añoFinal}-${String(mesFinal + 1).padStart(2, '0')}`;
+  }
+}
 
 function updateUI() {
   localStorage.setItem("transactions", JSON.stringify(transactions));
@@ -50,6 +78,7 @@ function updateUI() {
   }
 
   renderChart();
+  actualizarSelectorPeriodos();
 }
 
 function renderChart() {
@@ -98,7 +127,8 @@ document.getElementById("exportBtn").onclick = () => {
     Monto: t.amount,
     Método: t.method,
     Categoría: t.category,
-    Nota: t.note
+    Nota: t.note,
+    Periodo: t.periodo || ""
   }));
 
   const worksheet = XLSX.utils.json_to_sheet(data);
@@ -108,10 +138,13 @@ document.getElementById("exportBtn").onclick = () => {
   XLSX.writeFile(workbook, "registro_finanzas.xlsx");
 };
 
-window.onload = () => {
-  const saved = localStorage.getItem("transactions");
-  if (saved) {
-    transactions = JSON.parse(saved);
-    updateUI();
-  }
-};
+function actualizarSelectorPeriodos() {
+  const selector = document.getElementById("periodSelector");
+  const periodosUnicos = [...new Set(transactions.map(t => t.periodo).filter(p => p))];
+  selector.innerHTML = `<option value="">-- Selecciona un periodo --</option>`;
+  periodosUnicos.forEach(p => {
+    const option = document.createElement("option");
+    option.value = p;
+    option.textContent = p;
+    selector.appendChild(option);
+ [43dcd9a7-70db-4a1f-b0ae-981daa162054](https://github.com/pozeydon-code/AppRepository/tree/800099c5cd023b0790d343f8b75b01c9f710bc76/resources%2Fviews%2Fauth%2Fregister.blade.php?citationMarker=43dcd9a7-70db-4a1f-b0ae-981daa162054&citationId=1&citationId=2 "github.com")
