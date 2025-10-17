@@ -1,11 +1,9 @@
 let transactions = [];
-const presupuestoMensual = 5000;
-
 const lineasCredito = {
-  "PlataCard": 11500,
-  "Bradescard": 34500,
   "Klar": 28500,
-  "Mercado Pago": 21500
+  "PlataCard": 11500,
+  "Mercado Pago": 22500,
+  "Bradescard": 34500
 };
 
 const fechasCorte = {
@@ -15,18 +13,18 @@ const fechasCorte = {
   "Mercado Pago": 7
 };
 
-window.addEventListener("load", () => {
-  try {
-    const saved = localStorage.getItem("transactions");
-    if (saved) {
+window.onload = () => {
+  const saved = localStorage.getItem("transactions");
+  if (saved) {
+    try {
       transactions = JSON.parse(saved);
+    } catch (e) {
+      console.error("Error al cargar transacciones:", e);
+      transactions = [];
     }
-  } catch (e) {
-    console.error("Error al cargar transacciones:", e);
-    transactions = [];
   }
   updateUI();
-});
+};
 
 document.getElementById("transactionForm").onsubmit = (e) => {
   e.preventDefault();
@@ -44,14 +42,9 @@ document.getElementById("transactionForm").onsubmit = (e) => {
   }
 
   transactions.push({ type, amount, method, category, note, date, periodo });
+  localStorage.setItem("transactions", JSON.stringify(transactions));
   updateUI();
   e.target.reset();
-  document.getElementById("type").value = "deposit";
-  document.getElementById("method").value = "";
-  document.getElementById("category").value = "";
-  document.getElementById("date").value = "";
-  document.getElementById("note").value = "";
-
   mostrarConfirmacion("✅ Transacción registrada");
 };
 
@@ -72,12 +65,16 @@ function obtenerPeriodoCorte(fecha, tarjeta) {
 }
 
 function updateUI() {
-  localStorage.setItem("transactions", JSON.stringify(transactions));
+  renderHistorial();
+  aplicarFiltros();
+  actualizarSelectorPeriodos();
+  actualizarSaldosTarjetas();
+  actualizarBarrasCredito();
+}
 
+function renderHistorial() {
   const list = document.getElementById("transactionList");
   list.innerHTML = "";
-  let total = 0;
-
   transactions.forEach((t, index) => {
     const item = document.createElement("li");
     item.className = `transaction ${t.type}`;
@@ -92,46 +89,13 @@ function updateUI() {
       </div>
     `;
     list.appendChild(item);
-    total += t.type === "deposit" ? t.amount : -t.amount;
-  });
-
-  document.getElementById("total").textContent = total.toFixed(2);
-
-  renderChart();
-  actualizarSelectorPeriodos();
-  aplicarFiltros();
-  actualizarSaldosTarjetas();
-  actualizarBarrasCredito();
-}
-
-function renderChart() {
-  const ingresos = transactions.filter(t => t.type === "deposit").reduce((sum, t) => sum + t.amount, 0);
-  const gastos = transactions.filter(t => t.type === "expense").reduce((sum, t) => sum + t.amount, 0);
-  const ctx = document.getElementById("chart").getContext("2d");
-
-  if (window.chartInstance) window.chartInstance.destroy();
-
-  window.chartInstance = new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: ["Ingresos", "Gastos"],
-      datasets: [{
-        label: "Resumen",
-        data: [ingresos, gastos],
-        backgroundColor: ["#3b82f6", "#ef4444"]
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: { legend: { display: false } },
-      scales: { y: { beginAtZero: true } }
-    }
   });
 }
 
 function deleteTransaction(index) {
   if (confirm("¿Eliminar esta transacción?")) {
     transactions.splice(index, 1);
+    localStorage.setItem("transactions", JSON.stringify(transactions));
     updateUI();
   }
 }
@@ -181,24 +145,41 @@ document.getElementById("periodSelector").onchange = () => {
   document.getElementById("totalPeriodo").textContent = total.toFixed(2);
 };
 
-document.getElementById("exportBtn").onclick = () => {
-  const wsData = [["Tipo", "Monto", "Método", "Categoría", "Fecha", "Nota"]];
+function actualizarSaldosTarjetas() {
+  const saldos = {};
   transactions.forEach(t => {
-    wsData.push([
-      t.type,
-      t.amount,
-      t.method,
-      t.category,
-      new Date(t.date).toLocaleDateString(),
-      t.note
-    ]);
+    if (!saldos[t.method]) saldos[t.method] = 0;
+    saldos[t.method] += t.type === "deposit" ? t.amount : -t.amount;
   });
 
-  const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.aoa_to_sheet(wsData);
-  XLSX.utils.book_append_sheet(wb, ws, "Transacciones");
-  XLSX.writeFile(wb, "reporte_finanzas.xlsx");
-};
+  const lista = document.getElementById("saldosTarjetas");
+  lista.innerHTML = "";
+  Object.entries(saldos).forEach(([tarjeta, saldo]) => {
+    const li = document.createElement("li");
+    li.textContent = `${tarjeta}: $${saldo.toFixed(2)}`;
+    lista.appendChild(li);
+  });
+}
+
+function actualizarBarrasCredito() {
+  const container = document.getElementById("barrasContainer");
+  container.innerHTML = "";
+
+  Object.keys(lineasCredito).forEach(tarjeta => {
+    const gastos = transactions
+      .filter(t => t.method === tarjeta && t.type === "expense")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const porcentaje = Math.min((gastos / lineasCredito[tarjeta]) * 100, 100);
+    const barra = document.createElement("div");
+    barra.className = "barraTarjeta";
+    barra.innerHTML = `
+      <span>${tarjeta}: ${porcentaje.toFixed(1)}% usado</span>
+      <div class="progreso" style="width:${porcentaje}%"></div>
+    `;
+    container.appendChild(barra);
+  });
+}
 
 function mostrarConfirmacion(texto) {
   const confirm = document.createElement("div");
@@ -214,20 +195,4 @@ function mostrarConfirmacion(texto) {
   confirm.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
   confirm.style.zIndex = "1000";
   document.body.appendChild(confirm);
-  setTimeout(() => confirm.remove(), 2500);
-}
-
-function actualizarSaldosTarjetas() {
-  const saldos = {};
-  Object.keys(lineasCredito).forEach(t => saldos[t] = lineasCredito[t]);
-
-  transactions.forEach(t => {
-    if (saldos[t.method] !== undefined) {
-      saldos[t.method] += t.type === "deposit" ? t.amount : -t.amount;
-    }
-  });
-
-  const lista = document.getElementById("saldosTarjetas");
-  lista.innerHTML = "";
-  Object.entries(saldos).forEach(([tarjeta, saldo]) => {
-    const li = document.createElement
+  set
