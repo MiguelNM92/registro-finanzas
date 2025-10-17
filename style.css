@@ -95,6 +95,10 @@ button {
   cursor: pointer;
 }
 
+#advancedFilter select {
+  margin-bottom: 10px;
+}
+
 canvas {
   background-color: #0f172a;
   border-radius: 8px;
