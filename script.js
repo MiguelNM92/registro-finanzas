@@ -1,6 +1,13 @@
 let transactions = [];
 const presupuestoMensual = 5000;
 
+const lineasCredito = {
+  "PlataCard": 11500,
+  "Bradescard": 34500,
+  "Klar": 28500,
+  "Mercado Pago": 21500
+};
+
 const fechasCorte = {
   "Klar": 26,
   "Bradescard": 10,
@@ -26,6 +33,13 @@ document.getElementById("transactionForm").onsubmit = (e) => {
   transactions.push({ type, amount, method, category, note, date, periodo });
   updateUI();
   e.target.reset();
+  document.getElementById("type").value = "deposit";
+  document.getElementById("method").value = "";
+  document.getElementById("category").value = "";
+  document.getElementById("date").value = "";
+  document.getElementById("note").value = "";
+
+  mostrarConfirmacion("✅ Transacción registrada");
 };
 
 function obtenerPeriodoCorte(fecha, tarjeta) {
@@ -45,13 +59,7 @@ function obtenerPeriodoCorte(fecha, tarjeta) {
 }
 
 function updateUI() {
-  try {
-    localStorage.setItem("transactions", JSON.stringify(transactions));
-  } catch (error) {
-    console.error("Error al guardar en localStorage:", error);
-    alert("❌ No se pudo guardar la transacción.");
-    return;
-  }
+  localStorage.setItem("transactions", JSON.stringify(transactions));
 
   const list = document.getElementById("transactionList");
   list.innerHTML = "";
@@ -76,100 +84,59 @@ function updateUI() {
 
   document.getElementById("total").textContent = total.toFixed(2);
 
-  const gastosDelMes = transactions
-    .filter(t => t.type === "expense")
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  if (gastosDelMes > presupuestoMensual) {
-    alert("⚠️ Has superado tu presupuesto mensual de $" + presupuestoMensual);
-  }
-
   renderChart();
   actualizarSelectorPeriodos();
   aplicarFiltros();
-
-  const confirm = document.createElement("div");
-  confirm.textContent = "✅ Transacción guardada";
-  confirm.style.position = "fixed";
-  confirm.style.bottom = "20px";
-  confirm.style.left = "50%";
-  confirm.style.transform = "translateX(-50%)";
-  confirm.style.background = "#22c55e";
-  confirm.style.color = "white";
-  confirm.style.padding = "10px 20px";
-  confirm.style.borderRadius = "6px";
-  confirm.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
-  confirm.style.zIndex = "1000";
-  document.body.appendChild(confirm);
-  setTimeout(() => confirm.remove(), 2000);
+  actualizarSaldosTarjetas();
+  actualizarBarrasCredito();
 }
 
 function renderChart() {
-  const ingresos = transactions
-    .filter(t => t.type === "deposit")
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  const gastos = transactions
-    .filter(t => t.type === "expense")
-    .reduce((sum, t) => sum + t.amount, 0);
-
+  const ingresos = transactions.filter(t => t.type === "deposit").reduce((sum, t) => sum + t.amount, 0);
+  const gastos = transactions.filter(t => t.type === "expense").reduce((sum, t) => sum + t.amount, 0);
   const ctx = document.getElementById("chart").getContext("2d");
 
-  if (window.chartInstance) {
-    window.chartInstance.destroy();
-  }
+  if (window.chartInstance) window.chartInstance.destroy();
 
   window.chartInstance = new Chart(ctx, {
     type: "bar",
     data: {
       labels: ["Ingresos", "Gastos"],
       datasets: [{
-        label: "Este mes",
+        label: "Resumen",
         data: [ingresos, gastos],
         backgroundColor: ["#3b82f6", "#ef4444"]
       }]
     },
     options: {
       responsive: true,
-      plugins: {
-        legend: { display: false }
-      },
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true } }
     }
   });
 }
 
 function deleteTransaction(index) {
-  const confirmDelete = confirm("¿Eliminar esta transacción?");
-  if (confirmDelete) {
+  if (confirm("¿Eliminar esta transacción?")) {
     transactions.splice(index, 1);
     updateUI();
   }
 }
 
 document.getElementById("clearBtn").onclick = () => {
-  const confirmClear = confirm("¿Estás seguro de que quieres borrar todas las transacciones?");
-  if (confirmClear) {
+  if (confirm("¿Seguro que quieres borrar todo?")) {
     transactions = [];
     localStorage.removeItem("transactions");
     updateUI();
-    alert("🧹 Historial borrado correctamente.");
+    mostrarConfirmacion("🧹 Historial borrado");
   }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
   const saved = localStorage.getItem("transactions");
   if (saved) {
-    try {
-      transactions = JSON.parse(saved);
-      updateUI();
-    } catch (error) {
-      console.error("Error al cargar transacciones:", error);
-    }
+    transactions = JSON.parse(saved);
+    updateUI();
   }
 });
 
@@ -183,3 +150,80 @@ function aplicarFiltros() {
   const filtradas = transactions.filter(t => {
     const coincideCategoria = categoria ? t.category === categoria : true;
     const coincideMetodo = metodo ? t.method === metodo : true;
+    return coincideCategoria && coincideMetodo;
+  });
+
+  const total = filtradas.reduce((sum, t) => t.type === "deposit" ? sum + t.amount : sum - t.amount, 0);
+  document.getElementById("totalFiltrado").textContent = total.toFixed(2);
+}
+
+function actualizarSelectorPeriodos() {
+  const selector = document.getElementById("periodSelector");
+  const periodos = [...new Set(transactions.map(t => t.periodo).filter(Boolean))];
+  selector.innerHTML = `<option value="">-- Selecciona un periodo --</option>`;
+  periodos.forEach(p => {
+    const option = document.createElement("option");
+    option.value = p;
+    option.textContent = p;
+    selector.appendChild(option);
+  });
+}
+
+document.getElementById("periodSelector").onchange = () => {
+  const periodo = document.getElementById("periodSelector").value;
+  const filtradas = transactions.filter(t => t.periodo === periodo && t.type === "expense");
+  const total = filtradas.reduce((sum, t) => sum + t.amount, 0);
+  document.getElementById("totalPeriodo").textContent = total.toFixed(2);
+};
+
+document.getElementById("exportBtn").onclick = () => {
+  const wsData = [["Tipo", "Monto", "Método", "Categoría", "Fecha", "Nota"]];
+  transactions.forEach(t => {
+    wsData.push([
+      t.type,
+      t.amount,
+      t.method,
+      t.category,
+      new Date(t.date).toLocaleDateString(),
+      t.note
+    ]);
+  });
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(wsData);
+  XLSX.utils.book_append_sheet(wb, ws, "Transacciones");
+  XLSX.writeFile(wb, "reporte_finanzas.xlsx");
+};
+
+function mostrarConfirmacion(texto) {
+  const confirm = document.createElement("div");
+  confirm.textContent = texto;
+  confirm.style.position = "fixed";
+  confirm.style.bottom = "20px";
+  confirm.style.left = "50%";
+  confirm.style.transform = "translateX(-50%)";
+  confirm.style.background = "#22c55e";
+  confirm.style.color = "white";
+  confirm.style.padding = "10px 20px";
+  confirm.style.borderRadius = "6px";
+  confirm.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
+  confirm.style.zIndex = "1000";
+  document.body.appendChild(confirm);
+  setTimeout(() => confirm.remove(), 2500);
+}
+
+function actualizarSaldosTarjetas() {
+  const saldos = {};
+  Object.keys(lineasCredito).forEach(t => saldos[t] = lineasCredito[t]);
+
+  transactions.forEach(t => {
+    if (saldos[t.method] !== undefined) {
+      saldos[t.method] += t.type === "deposit" ? t.amount : -t.amount;
+    }
+  });
+
+  const lista = document.getElementById("saldosTarjetas");
+  lista.innerHTML = "";
+  Object.entries(saldos).forEach(([tarjeta, saldo]) => {
+    const li = document.createElement("li");
+    li.textContent = `${tarjeta}: $${saldo.toFixed
