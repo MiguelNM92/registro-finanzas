@@ -104,6 +104,45 @@ function updateUI() {
   setTimeout(() => confirm.remove(), 2000);
 }
 
+function renderChart() {
+  const ingresos = transactions
+    .filter(t => t.type === "deposit")
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  const gastos = transactions
+    .filter(t => t.type === "expense")
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  const ctx = document.getElementById("chart").getContext("2d");
+
+  if (window.chartInstance) {
+    window.chartInstance.destroy();
+  }
+
+  window.chartInstance = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: ["Ingresos", "Gastos"],
+      datasets: [{
+        label: "Este mes",
+        data: [ingresos, gastos],
+        backgroundColor: ["#3b82f6", "#ef4444"]
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
 function deleteTransaction(index) {
   const confirmDelete = confirm("¿Eliminar esta transacción?");
   if (confirmDelete) {
@@ -144,12 +183,3 @@ function aplicarFiltros() {
   const filtradas = transactions.filter(t => {
     const coincideCategoria = categoria ? t.category === categoria : true;
     const coincideMetodo = metodo ? t.method === metodo : true;
-    return coincideCategoria && coincideMetodo;
-  });
-
-  const total = filtradas.reduce((sum, t) => {
-    return t.type === "deposit" ? sum + t.amount : sum - t.amount;
-  }, 0);
-
-  document.getElementById("totalFiltrado").textContent = total.toFixed(2);
-}
