@@ -1,106 +1,72 @@
-/* Estilo base */
 body {
   font-family: Arial, sans-serif;
-  margin: 20px;
-  background-color: #f9fafb;
-  color: #111827;
+  margin: 0;
+  padding: 20px;
+  background-color: #0f172a;
+  color: #e2e8f0;
 }
 
 header h1 {
   text-align: center;
   margin-bottom: 20px;
+  color: #38bdf8;
 }
 
 section {
   margin-bottom: 30px;
-  background: #ffffff;
+  background-color: #1e293b;
   padding: 16px;
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
-
-/* Botones */
-button {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-#exportBtn,
-#exportPdfBtn {
-  background-color: #3b82f6;
-  color: white;
-  margin-top: 10px;
-}
-
-/* Transacciones */
-.transaction.deposit {
-  color: #10b981;
-}
-
-.transaction.expense {
-  color: #ef4444;
-}
-
-/* Botón flotante */
-.floating-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  font-size: 24px;
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
   box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-  z-index: 1000;
 }
 
-/* Formulario flotante */
-.floating-form {
-  position: fixed;
-  bottom: 80px;
-  right: 20px;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 16px;
-  width: 300px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  z-index: 999;
+h2, h3 {
+  color: #22d3ee;
 }
 
-.floating-form label {
+label {
   display: block;
   margin-bottom: 10px;
   font-weight: 500;
 }
 
-.floating-form input,
-.floating-form select {
+input,
+select {
   width: 100%;
   padding: 6px;
   margin-top: 4px;
-  margin-bottom: 8px;
-  border: 1px solid #ccc;
+  margin-bottom: 12px;
+  border: 1px solid #334155;
   border-radius: 4px;
+  background-color: #0f172a;
+  color: #e2e8f0;
 }
 
-.floating-form button {
-  background-color: #10b981;
-  color: white;
-  border: none;
+button {
   padding: 8px 12px;
+  border: none;
   border-radius: 4px;
   cursor: pointer;
-  width: 100%;
+  background-color: #22c55e;
+  color: white;
+  font-weight: bold;
 }
 
-/* Ocultar elementos */
-.hidden {
-  display: none;
+#exportBtn,
+#exportPdfBtn {
+  background-color: #3b82f6;
+  margin-top: 10px;
+}
+
+.transaction.deposit {
+  color: #4ade80;
+}
+
+.transaction.expense {
+  color: #f87171;
+}
+
+canvas {
+  background-color: #0f172a;
+  border-radius: 8px;
 }
