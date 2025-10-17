@@ -72,12 +72,6 @@ button {
   font-weight: bold;
 }
 
-#exportBtn,
-#exportPdfBtn {
-  background-color: #3b82f6;
-  margin-top: 10px;
-}
-
 #clearBtn {
   background-color: #ef4444;
   color: white;
@@ -112,12 +106,6 @@ button {
   color: #f87171;
   font-size: 20px;
   cursor: pointer;
-}
-
-canvas {
-  background-color: #0f172a;
-  border-radius: 8px;
-  margin-top: 10px;
 }
 
 .filtrosHorizontales {
@@ -171,4 +159,5 @@ details summary {
   height: 12px;
   background-color: #22c55e;
   border-radius: 6px;
+  transition: width 0.3s ease;
 }
