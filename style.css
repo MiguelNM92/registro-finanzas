@@ -22,6 +22,7 @@ section {
 
 h2, h3 {
   color: #22d3ee;
+  margin-bottom: 12px;
 }
 
 label {
@@ -59,11 +60,19 @@ button {
 }
 
 .transaction.deposit {
+  background-color: #14532d;
   color: #4ade80;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 6px;
 }
 
 .transaction.expense {
+  background-color: #7f1d1d;
   color: #f87171;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 6px;
 }
 
 canvas {
