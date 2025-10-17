@@ -59,6 +59,12 @@ button {
   margin-top: 10px;
 }
 
+#clearBtn {
+  background-color: #ef4444;
+  color: white;
+  margin-top: 10px;
+}
+
 .transaction.deposit {
   background-color: #14532d;
   color: #4ade80;
