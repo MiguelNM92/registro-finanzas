@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Registro de Finanzas</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="manifest" href="manifest.json" />
 </head>
 <body>
   <header>
@@ -69,12 +68,6 @@
     </aside>
   </main>
 
-  <section id="summary">
-    <h2>Saldo total: $<span id="total">0.00</span></h2>
-    <canvas id="chart" width="400" height="200"></canvas>
-    <button id="exportBtn">📤 Exportar a Excel</button>
-  </section>
-
   <section id="barrasCredito">
     <h3>Consumo de tarjetas de crédito</h3>
     <div id="barrasContainer"></div>
@@ -124,9 +117,7 @@
     <button id="clearBtn">🧹 Limpiar historial</button>
   </details>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
