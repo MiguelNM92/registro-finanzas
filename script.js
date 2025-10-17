@@ -15,6 +15,19 @@ const fechasCorte = {
   "Mercado Pago": 7
 };
 
+window.addEventListener("load", () => {
+  try {
+    const saved = localStorage.getItem("transactions");
+    if (saved) {
+      transactions = JSON.parse(saved);
+    }
+  } catch (e) {
+    console.error("Error al cargar transacciones:", e);
+    transactions = [];
+  }
+  updateUI();
+});
+
 document.getElementById("transactionForm").onsubmit = (e) => {
   e.preventDefault();
   const type = document.getElementById("type").value;
@@ -132,14 +145,6 @@ document.getElementById("clearBtn").onclick = () => {
   }
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-  const saved = localStorage.getItem("transactions");
-  if (saved) {
-    transactions = JSON.parse(saved);
-    updateUI();
-  }
-});
-
 document.getElementById("categoryFilter").onchange = aplicarFiltros;
 document.getElementById("methodFilter").onchange = aplicarFiltros;
 
@@ -225,5 +230,4 @@ function actualizarSaldosTarjetas() {
   const lista = document.getElementById("saldosTarjetas");
   lista.innerHTML = "";
   Object.entries(saldos).forEach(([tarjeta, saldo]) => {
-    const li = document.createElement("li");
-    li.textContent = `${tarjeta}: $${saldo.toFixed
+    const li = document.createElement
