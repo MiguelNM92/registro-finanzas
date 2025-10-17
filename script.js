@@ -279,3 +279,6 @@ window.onload = () => {
     updateUI();
   }
 };
+document.getElementById("toggleFormBtn").onclick = () => {
+  document.getElementById("floatingForm").classList.toggle("hidden");
+};
