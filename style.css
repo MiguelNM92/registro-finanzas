@@ -81,6 +81,20 @@ button {
   border-radius: 6px;
 }
 
+.trans-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.deleteBtn {
+  background-color: transparent;
+  border: none;
+  color: #f87171;
+  font-size: 20px;
+  cursor: pointer;
+}
+
 canvas {
   background-color: #0f172a;
   border-radius: 8px;
