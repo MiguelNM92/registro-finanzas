@@ -26,7 +26,6 @@ document.getElementById("transactionForm").onsubmit = (e) => {
   transactions.push({ type, amount, method, category, note, date, periodo });
   updateUI();
   e.target.reset();
-  document.getElementById("floatingForm").classList.add("hidden");
 };
 
 function obtenerPeriodoCorte(fecha, tarjeta) {
@@ -46,7 +45,14 @@ function obtenerPeriodoCorte(fecha, tarjeta) {
 }
 
 function updateUI() {
-  localStorage.setItem("transactions", JSON.stringify(transactions));
+  try {
+    localStorage.setItem("transactions", JSON.stringify(transactions));
+  } catch (error) {
+    console.error("Error al guardar en localStorage:", error);
+    alert("❌ No se pudo guardar la transacción.");
+    return;
+  }
+
   const list = document.getElementById("transactionList");
   list.innerHTML = "";
   let total = 0;
@@ -75,6 +81,21 @@ function updateUI() {
 
   renderChart();
   actualizarSelectorPeriodos();
+
+  const confirm = document.createElement("div");
+  confirm.textContent = "✅ Transacción guardada";
+  confirm.style.position = "fixed";
+  confirm.style.bottom = "20px";
+  confirm.style.left = "50%";
+  confirm.style.transform = "translateX(-50%)";
+  confirm.style.background = "#22c55e";
+  confirm.style.color = "white";
+  confirm.style.padding = "10px 20px";
+  confirm.style.borderRadius = "6px";
+  confirm.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
+  confirm.style.zIndex = "1000";
+  document.body.appendChild(confirm);
+  setTimeout(() => confirm.remove(), 2000);
 }
 
 function renderChart() {
@@ -162,88 +183,4 @@ document.getElementById("monthSelector").onchange = () => {
   const [year, month] = selected.split("-").map(Number);
   const gastosPorCategoria = {};
 
-  transactions.forEach(t => {
-    const d = new Date(t.date);
-    if (
-      t.type === "expense" &&
-      d.getFullYear() === year &&
-      d.getMonth() + 1 === month
-    ) {
-      gastosPorCategoria[t.category] = (gastosPorCategoria[t.category] || 0) + t.amount;
-    }
-  });
-
-  const labels = Object.keys(gastosPorCategoria);
-  const data = Object.values(gastosPorCategoria);
-  const colors = ["#ef4444", "#f59e0b", "#10b981", "#3b82f6", "#8b5cf6"];
-
-  const ctx = document.getElementById("categoryChart").getContext("2d");
-  if (window.categoryChartInstance) {
-    window.categoryChartInstance.destroy();
-  }
-
-  window.categoryChartInstance = new Chart(ctx, {
-    type: "pie",
-    data: {
-      labels,
-      datasets: [{
-        data,
-        backgroundColor: colors.slice(0, labels.length)
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { position: "bottom" }
-      }
-    }
-  });
-};
-
-document.getElementById("exportPdfBtn").onclick = () => {
-  const canvas = document.getElementById("categoryChart");
-  const imgData = canvas.toDataURL("image/png");
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-
-  doc.setFontSize(16);
-  doc.text("Reporte mensual por categoría", 20, 20);
-  doc.addImage(imgData, "PNG", 15, 30, 180, 100);
-  doc.save("reporte_mensual.pdf");
-};
-
-document.getElementById("compareMonth1").onchange = compararMeses;
-document.getElementById("compareMonth2").onchange = compararMeses;
-
-function compararMeses() {
-  const m1 = document.getElementById("compareMonth1").value;
-  const m2 = document.getElementById("compareMonth2").value;
-  if (!m1 || !m2) return;
-
-  const resumen = {};
-
-  transactions.forEach(t => {
-    const d = new Date(t.date);
-    const mes = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-    if (t.type === "expense" && (mes === m1 || mes === m2)) {
-      const key = `${mes}-${t.category}`;
-      resumen[key] = (resumen[key] || 0) + t.amount;
-    }
-  });
-
-  const categorias = [...new Set(transactions.map(t => t.category))];
-  const datosMes1 = categorias.map(cat => resumen[`${m1}-${cat}`] || 0);
-  const datosMes2 = categorias.map(cat => resumen[`${m2}-${cat}`] || 0);
-
-  const ctx = document.getElementById("compareChart").getContext("2d");
-  if (window.compareChartInstance) {
-    window.compareChartInstance.destroy();
-  }
-
-  window.compareChartInstance = new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: categorias,
-      datasets: [
-        {
-          label: `Gastos ${m1}`,
+  transactions.for
