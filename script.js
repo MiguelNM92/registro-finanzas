@@ -147,4 +147,135 @@ function actualizarSelectorPeriodos() {
     option.value = p;
     option.textContent = p;
     selector.appendChild(option);
- [43dcd9a7-70db-4a1f-b0ae-981daa162054](https://github.com/pozeydon-code/AppRepository/tree/800099c5cd023b0790d343f8b75b01c9f710bc76/resources%2Fviews%2Fauth%2Fregister.blade.php?citationMarker=43dcd9a7-70db-4a1f-b0ae-981daa162054&citationId=1&citationId=2 "github.com")
+  });
+}
+
+document.getElementById("periodSelector").onchange = () => {
+  const periodo = document.getElementById("periodSelector").value;
+  const gastos = transactions
+    .filter(t => t.periodo === periodo && t.type === "expense")
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  document.getElementById("totalPeriodo").textContent = gastos.toFixed(2);
+};
+document.getElementById("monthSelector").onchange = () => {
+  const selected = document.getElementById("monthSelector").value;
+  if (!selected) return;
+
+  const [year, month] = selected.split("-").map(Number);
+  const gastosPorCategoria = {};
+
+  transactions.forEach(t => {
+    const d = new Date(t.date);
+    if (
+      t.type === "expense" &&
+      d.getFullYear() === year &&
+      d.getMonth() + 1 === month
+    ) {
+      gastosPorCategoria[t.category] = (gastosPorCategoria[t.category] || 0) + t.amount;
+    }
+  });
+
+  const labels = Object.keys(gastosPorCategoria);
+  const data = Object.values(gastosPorCategoria);
+  const colors = ["#ef4444", "#f59e0b", "#10b981", "#3b82f6", "#8b5cf6"];
+
+  const ctx = document.getElementById("categoryChart").getContext("2d");
+  if (window.categoryChartInstance) {
+    window.categoryChartInstance.destroy();
+  }
+
+  window.categoryChartInstance = new Chart(ctx, {
+    type: "pie",
+    data: {
+      labels,
+      datasets: [{
+        data,
+        backgroundColor: colors.slice(0, labels.length)
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: "bottom" }
+      }
+    }
+  });
+};
+
+document.getElementById("exportPdfBtn").onclick = () => {
+  const canvas = document.getElementById("categoryChart");
+  const imgData = canvas.toDataURL("image/png");
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFontSize(16);
+  doc.text("Reporte mensual por categoría", 20, 20);
+  doc.addImage(imgData, "PNG", 15, 30, 180, 100);
+  doc.save("reporte_mensual.pdf");
+};
+
+document.getElementById("compareMonth1").onchange = compararMeses;
+document.getElementById("compareMonth2").onchange = compararMeses;
+
+function compararMeses() {
+  const m1 = document.getElementById("compareMonth1").value;
+  const m2 = document.getElementById("compareMonth2").value;
+  if (!m1 || !m2) return;
+
+  const resumen = {};
+
+  transactions.forEach(t => {
+    const d = new Date(t.date);
+    const mes = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    if (t.type === "expense" && (mes === m1 || mes === m2)) {
+      const key = `${mes}-${t.category}`;
+      resumen[key] = (resumen[key] || 0) + t.amount;
+    }
+  });
+
+  const categorias = [...new Set(transactions.map(t => t.category))];
+  const datosMes1 = categorias.map(cat => resumen[`${m1}-${cat}`] || 0);
+  const datosMes2 = categorias.map(cat => resumen[`${m2}-${cat}`] || 0);
+
+  const ctx = document.getElementById("compareChart").getContext("2d");
+  if (window.compareChartInstance) {
+    window.compareChartInstance.destroy();
+  }
+
+  window.compareChartInstance = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: categorias,
+      datasets: [
+        {
+          label: `Gastos ${m1}`,
+          data: datosMes1,
+          backgroundColor: "#3b82f6"
+        },
+        {
+          label: `Gastos ${m2}`,
+          data: datosMes2,
+          backgroundColor: "#ef4444"
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: "bottom" }
+      },
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+}
+
+window.onload = () => {
+  const saved = localStorage.getItem("transactions");
+  if (saved) {
+    transactions = JSON.parse(saved);
+    updateUI();
+  }
+};
