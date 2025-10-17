@@ -57,13 +57,18 @@ function updateUI() {
   list.innerHTML = "";
   let total = 0;
 
-  transactions.forEach((t) => {
+  transactions.forEach((t, index) => {
     const item = document.createElement("li");
     item.className = `transaction ${t.type}`;
     item.innerHTML = `
-      <strong>${t.note || "Sin nota"}</strong> - ${t.method}<br/>
-      ${t.category} • ${new Date(t.date).toLocaleDateString()}<br/>
-      ${t.type === "deposit" ? "+" : "-"}$${t.amount.toFixed(2)}
+      <div class="trans-content">
+        <div>
+          <strong>${t.note || "Sin nota"}</strong> - ${t.method}<br/>
+          ${t.category} • ${new Date(t.date).toLocaleDateString()}<br/>
+          ${t.type === "deposit" ? "+" : "-"}$${t.amount.toFixed(2)}
+        </div>
+        <button class="deleteBtn" onclick="deleteTransaction(${index})">🗑</button>
+      </div>
     `;
     list.appendChild(item);
     total += t.type === "deposit" ? t.amount : -t.amount;
@@ -98,6 +103,14 @@ function updateUI() {
   setTimeout(() => confirm.remove(), 2000);
 }
 
+function deleteTransaction(index) {
+  const confirmDelete = confirm("¿Eliminar esta transacción?");
+  if (confirmDelete) {
+    transactions.splice(index, 1);
+    updateUI();
+  }
+}
+
 document.getElementById("clearBtn").onclick = () => {
   const confirmClear = confirm("¿Estás seguro de que quieres borrar todas las transacciones?");
   if (confirmClear) {
@@ -108,7 +121,7 @@ document.getElementById("clearBtn").onclick = () => {
   }
 };
 
-window.onload = () => {
+document.addEventListener("DOMContentLoaded", () => {
   const saved = localStorage.getItem("transactions");
   if (saved) {
     try {
@@ -118,4 +131,4 @@ window.onload = () => {
       console.error("Error al cargar transacciones:", error);
     }
   }
-};
+});
