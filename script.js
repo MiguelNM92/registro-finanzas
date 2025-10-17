@@ -8,10 +8,6 @@ const fechasCorte = {
   "Mercado Pago": 7
 };
 
-document.getElementById("addBtn").onclick = () => {
-  document.getElementById("formContainer").classList.toggle("hidden");
-};
-
 document.getElementById("transactionForm").onsubmit = (e) => {
   e.preventDefault();
   const type = document.getElementById("type").value;
@@ -30,7 +26,7 @@ document.getElementById("transactionForm").onsubmit = (e) => {
   transactions.push({ type, amount, method, category, note, date, periodo });
   updateUI();
   e.target.reset();
-  document.getElementById("formContainer").classList.add("hidden");
+  document.getElementById("floatingForm").classList.add("hidden");
 };
 
 function obtenerPeriodoCorte(fecha, tarjeta) {
@@ -60,7 +56,7 @@ function updateUI() {
     item.className = `transaction ${t.type}`;
     item.innerHTML = `
       <strong>${t.note || "Sin nota"}</strong> - ${t.method}<br/>
-      ${t.category} • ${t.date.toLocaleDateString()}<br/>
+      ${t.category} • ${new Date(t.date).toLocaleDateString()}<br/>
       ${t.type === "deposit" ? "+" : "-"}$${t.amount.toFixed(2)}
     `;
     list.appendChild(item);
@@ -158,6 +154,7 @@ document.getElementById("periodSelector").onchange = () => {
 
   document.getElementById("totalPeriodo").textContent = gastos.toFixed(2);
 };
+
 document.getElementById("monthSelector").onchange = () => {
   const selected = document.getElementById("monthSelector").value;
   if (!selected) return;
@@ -239,46 +236,3 @@ function compararMeses() {
   const datosMes2 = categorias.map(cat => resumen[`${m2}-${cat}`] || 0);
 
   const ctx = document.getElementById("compareChart").getContext("2d");
-  if (window.compareChartInstance) {
-    window.compareChartInstance.destroy();
-  }
-
-  window.compareChartInstance = new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: categorias,
-      datasets: [
-        {
-          label: `Gastos ${m1}`,
-          data: datosMes1,
-          backgroundColor: "#3b82f6"
-        },
-        {
-          label: `Gastos ${m2}`,
-          data: datosMes2,
-          backgroundColor: "#ef4444"
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { position: "bottom" }
-      },
-      scales: {
-        y: { beginAtZero: true }
-      }
-    }
-  });
-}
-
-window.onload = () => {
-  const saved = localStorage.getItem("transactions");
-  if (saved) {
-    transactions = JSON.parse(saved);
-    updateUI();
-  }
-};
-document.getElementById("toggleFormBtn").onclick = () => {
-  document.getElementById("floatingForm").classList.toggle("hidden");
-};
