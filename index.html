@@ -18,7 +18,7 @@
       <form id="transactionForm">
         <label>💼 Tipo:
           <select id="type">
-            <option value="deposit">Depósito</option>
+            <option value="deposit">Ingreso</option>
             <option value="expense">Gasto</option>
           </select>
         </label>
@@ -27,35 +27,27 @@
         </label>
         <label>💳 Método de pago:
           <select id="method">
-            <optgroup label="Tarjetas de crédito">
-              <option value="Klar">Klar</option>
-              <option value="PlataCard">PlataCard</option>
-              <option value="Bradescard">Bradescard</option>
-              <option value="Mercado Pago">Mercado Pago</option>
-            </optgroup>
-            <optgroup label="Tarjetas de débito">
-              <option value="Banorte">Banorte</option>
-              <option value="UpsiVale">UpsiVale</option>
-            </optgroup>
-            <optgroup label="Otros">
-              <option value="Efectivo">Efectivo</option>
-              <option value="Transferencia">Transferencia</option>
-            </optgroup>
+            <option value="Klar">Klar</option>
+            <option value="PlataCard">PlataCard</option>
+            <option value="Bradescard">Bradescard</option>
+            <option value="Mercado Pago">Mercado Pago</option>
+            <option value="Banorte">Banorte</option>
+            <option value="UpsiVale">UpsiVale</option>
+            <option value="Efectivo">Efectivo</option>
+            <option value="Transferencia">Transferencia</option>
           </select>
         </label>
         <label>📂 Categoría:
           <select id="category">
             <option value="Comida">Comida</option>
-            <option value="Transporte">Transporte</option>
-            <option value="Entretenimiento">Entretenimiento</option>
-            <option value="Salud">Salud</option>
+            <option value="Servicios">Servicios</option>
             <option value="Otros">Otros</option>
           </select>
         </label>
         <label>📅 Fecha:
           <input type="date" id="date" />
         </label>
-        <label>📝 Nota:
+        <label>📝 Descripción:
           <input type="text" id="note" />
         </label>
         <button type="submit">Guardar</button>
@@ -88,9 +80,7 @@
         <select id="categoryFilter">
           <option value="">-- Todas --</option>
           <option value="Comida">Comida</option>
-          <option value="Transporte">Transporte</option>
-          <option value="Entretenimiento">Entretenimiento</option>
-          <option value="Salud">Salud</option>
+          <option value="Servicios">Servicios</option>
           <option value="Otros">Otros</option>
         </select>
       </label>
@@ -117,7 +107,6 @@
     <button id="clearBtn">🧹 Limpiar historial</button>
   </details>
 
-  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
