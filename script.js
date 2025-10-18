@@ -1,4 +1,6 @@
 let transactions = [];
+const DEBUG = true;
+
 const lineasCredito = {
   "Klar": 28500,
   "PlataCard": 11500,
@@ -14,12 +16,14 @@ const fechasCorte = {
 };
 
 window.onload = () => {
+  if (DEBUG) console.log("🟢 Cargando transacciones desde localStorage...");
   const saved = localStorage.getItem("transactions");
   if (saved) {
     try {
       transactions = JSON.parse(saved);
+      if (DEBUG) console.log("✅ Transacciones cargadas:", transactions);
     } catch (e) {
-      console.error("Error al cargar transacciones:", e);
+      console.error("❌ Error al cargar transacciones:", e);
       transactions = [];
     }
   }
@@ -28,6 +32,8 @@ window.onload = () => {
 
 document.getElementById("transactionForm").onsubmit = (e) => {
   e.preventDefault();
+  if (DEBUG) console.log("📥 Guardando nueva transacción...");
+
   const type = document.getElementById("type").value;
   const amount = parseFloat(document.getElementById("amount").value);
   const method = document.getElementById("method").value;
@@ -41,8 +47,11 @@ document.getElementById("transactionForm").onsubmit = (e) => {
     periodo = obtenerPeriodoCorte(date, method);
   }
 
-  transactions.push({ type, amount, method, category, note, date, periodo });
+  const nueva = { type, amount, method, category, note, date, periodo };
+  transactions.push(nueva);
   localStorage.setItem("transactions", JSON.stringify(transactions));
+  if (DEBUG) console.log("✅ Transacción registrada:", nueva);
+
   updateUI();
   e.target.reset();
   mostrarConfirmacion("✅ Transacción registrada");
@@ -65,6 +74,7 @@ function obtenerPeriodoCorte(fecha, tarjeta) {
 }
 
 function updateUI() {
+  if (DEBUG) console.log("🔄 Actualizando interfaz...");
   renderHistorial();
   aplicarFiltros();
   actualizarSelectorPeriodos();
@@ -90,6 +100,7 @@ function renderHistorial() {
     `;
     list.appendChild(item);
   });
+  if (DEBUG) console.log("📋 Historial actualizado");
 }
 
 function deleteTransaction(index) {
@@ -97,6 +108,7 @@ function deleteTransaction(index) {
     transactions.splice(index, 1);
     localStorage.setItem("transactions", JSON.stringify(transactions));
     updateUI();
+    if (DEBUG) console.log("🗑 Transacción eliminada");
   }
 }
 
@@ -106,6 +118,7 @@ document.getElementById("clearBtn").onclick = () => {
     localStorage.removeItem("transactions");
     updateUI();
     mostrarConfirmacion("🧹 Historial borrado");
+    if (DEBUG) console.log("🧹 Todas las transacciones eliminadas");
   }
 };
 
@@ -124,6 +137,7 @@ function aplicarFiltros() {
 
   const total = filtradas.reduce((sum, t) => t.type === "deposit" ? sum + t.amount : sum - t.amount, 0);
   document.getElementById("totalFiltrado").textContent = total.toFixed(2);
+  if (DEBUG) console.log("🔍 Filtro aplicado:", { categoria, metodo, total });
 }
 
 function actualizarSelectorPeriodos() {
@@ -136,6 +150,7 @@ function actualizarSelectorPeriodos() {
     option.textContent = p;
     selector.appendChild(option);
   });
+  if (DEBUG) console.log("📅 Periodos actualizados:", periodos);
 }
 
 document.getElementById("periodSelector").onchange = () => {
@@ -143,11 +158,11 @@ document.getElementById("periodSelector").onchange = () => {
   const filtradas = transactions.filter(t => t.periodo === periodo && t.type === "expense");
   const total = filtradas.reduce((sum, t) => sum + t.amount, 0);
   document.getElementById("totalPeriodo").textContent = total.toFixed(2);
+  if (DEBUG) console.log("📊 Total en periodo:", periodo, total);
 };
 
 function actualizarSaldosTarjetas() {
   const saldos = {};
-
   Object.keys(lineasCredito).forEach(t => saldos[t] = lineasCredito[t]);
 
   transactions.forEach(t => {
@@ -166,6 +181,8 @@ function actualizarSaldosTarjetas() {
       : `<strong>${tarjeta}</strong>: $${saldo.toFixed(2)} disponibles`;
     lista.appendChild(li);
   });
+
+  if (DEBUG) console.log("💳 Saldos actualizados:", saldos);
 }
 
 function actualizarBarrasCredito() {
@@ -186,6 +203,8 @@ function actualizarBarrasCredito() {
     `;
     container.appendChild(barra);
   });
+
+  if (DEBUG) console.log("📈 Barras de consumo actualizadas");
 }
 
 function mostrarConfirmacion(texto) {
@@ -199,8 +218,4 @@ function mostrarConfirmacion(texto) {
   confirm.style.color = "white";
   confirm.style.padding = "10px 20px";
   confirm.style.borderRadius = "6px";
-  confirm.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
-  confirm.style.zIndex = "1000";
-  document.body.appendChild(confirm);
-  setTimeout(() => confirm.remove(), 2500);
-}
+  confirm.style.boxShadow = "0
