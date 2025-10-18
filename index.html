@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Registro de Finanzas</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
 </head>
 <body>
   <header>
@@ -41,6 +42,13 @@
           <select id="category">
             <option value="Comida">Comida</option>
             <option value="Servicios">Servicios</option>
+            <option value="Transporte">Transporte</option>
+            <option value="Entretenimiento">Entretenimiento</option>
+            <option value="Salud">Salud</option>
+            <option value="Educación">Educación</option>
+            <option value="Ropa">Ropa</option>
+            <option value="Mascotas">Mascotas</option>
+            <option value="Viajes">Viajes</option>
             <option value="Otros">Otros</option>
           </select>
         </label>
@@ -81,6 +89,13 @@
           <option value="">-- Todas --</option>
           <option value="Comida">Comida</option>
           <option value="Servicios">Servicios</option>
+          <option value="Transporte">Transporte</option>
+          <option value="Entretenimiento">Entretenimiento</option>
+          <option value="Salud">Salud</option>
+          <option value="Educación">Educación</option>
+          <option value="Ropa">Ropa</option>
+          <option value="Mascotas">Mascotas</option>
+          <option value="Viajes">Viajes</option>
           <option value="Otros">Otros</option>
         </select>
       </label>
@@ -103,10 +118,23 @@
 
   <details id="transactions">
     <summary><h3>Historial de transacciones</h3></summary>
-    <ul id="transactionList"></ul>
+
+    <h4>📈 Ingresos</h4>
+    <ul id="listaIngresos"></ul>
+
+    <h4>📉 Gastos</h4>
+    <ul id="listaGastos"></ul>
+
     <button id="clearBtn">🧹 Limpiar historial</button>
   </details>
 
   <script src="script.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js")
+        .then(() => console.log("✅ Service Worker registrado"))
+        .catch(err => console.error("❌ Error al registrar SW:", err));
+    }
+  </script>
 </body>
 </html>
