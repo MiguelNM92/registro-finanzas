@@ -147,6 +147,9 @@ document.getElementById("periodSelector").onchange = () => {
 
 function actualizarSaldosTarjetas() {
   const saldos = {};
+
+  Object.keys(lineasCredito).forEach(t => saldos[t] = lineasCredito[t]);
+
   transactions.forEach(t => {
     if (!saldos[t.method]) saldos[t.method] = 0;
     saldos[t.method] += t.type === "deposit" ? t.amount : -t.amount;
@@ -154,9 +157,13 @@ function actualizarSaldosTarjetas() {
 
   const lista = document.getElementById("saldosTarjetas");
   lista.innerHTML = "";
+
   Object.entries(saldos).forEach(([tarjeta, saldo]) => {
+    const esCredito = lineasCredito[tarjeta] !== undefined;
     const li = document.createElement("li");
-    li.textContent = `${tarjeta}: $${saldo.toFixed(2)}`;
+    li.innerHTML = esCredito
+      ? `<strong>${tarjeta}</strong>: $${saldo.toFixed(2)} / $${lineasCredito[tarjeta].toFixed(2)} disponibles`
+      : `<strong>${tarjeta}</strong>: $${saldo.toFixed(2)} disponibles`;
     lista.appendChild(li);
   });
 }
@@ -195,4 +202,5 @@ function mostrarConfirmacion(texto) {
   confirm.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
   confirm.style.zIndex = "1000";
   document.body.appendChild(confirm);
-  set
+  setTimeout(() => confirm.remove(), 2500);
+}
