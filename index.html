@@ -6,33 +6,11 @@
   <title>Registro de Finanzas</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="manifest" href="manifest.json" />
-  <style>
-    #alertaSimulada {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: #22c55e;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: bold;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-      z-index: 999;
-      animation: fadeOut 4s forwards;
-    }
-    @keyframes fadeOut {
-      0% { opacity: 1; }
-      80% { opacity: 1; }
-      100% { opacity: 0; display: none; }
-    }
-  </style>
 </head>
 <body>
   <header>
     <img src="logo.png" alt="Logo" id="logo" />
     <h1>Registro de Finanzas</h1>
-    <button onclick="reiniciarDatos()" style="margin-top:10px; background:#0ea5e9; color:white; padding:6px 12px; border:none; border-radius:6px;">🔄 Reiniciar datos simulados</button>
   </header>
 
   <main class="grid">
@@ -89,7 +67,6 @@
       <ul id="saldosTarjetas"></ul>
     </aside>
   </main>
-
   <section id="barrasCredito">
     <h3>Consumo de tarjetas de crédito</h3>
     <div id="barrasContainer"></div>
@@ -157,18 +134,6 @@
         .then(() => console.log("✅ Service Worker registrado"))
         .catch(err => console.error("❌ Error al registrar SW:", err));
     }
-
-    function reiniciarDatos() {
-      localStorage.removeItem("transactions");
-      location.reload();
-    }
-
-    window.addEventListener("load", () => {
-      const alerta = document.createElement("div");
-      alerta.id = "alertaSimulada";
-      alerta.textContent = "🧪 Datos simulados cargados para prueba";
-      document.body.appendChild(alerta);
-    });
   </script>
 </body>
 </html>
