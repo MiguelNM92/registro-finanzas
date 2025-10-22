@@ -1,6 +1,4 @@
 let transactions = [];
-const DEBUG = true;
-
 const lineasCredito = {
   "Klar": 28500,
   "PlataCard": 11500,
@@ -20,55 +18,10 @@ window.onload = () => {
   if (saved) {
     try {
       transactions = JSON.parse(saved);
-      if (DEBUG) console.log("✅ Transacciones cargadas:", transactions);
     } catch {
       transactions = [];
     }
   }
-
-  if (!saved || transactions.length === 0) {
-    transactions = [
-      {
-        type: "expense",
-        amount: 1200,
-        method: "Klar",
-        category: "Comida",
-        note: "Supermercado",
-        date: new Date("2025-10-10"),
-        periodo: obtenerPeriodoCorte(new Date("2025-10-10"), "Klar")
-      },
-      {
-        type: "expense",
-        amount: 800,
-        method: "PlataCard",
-        category: "Transporte",
-        note: "Gasolina",
-        date: new Date("2025-10-12"),
-        periodo: obtenerPeriodoCorte(new Date("2025-10-12"), "PlataCard")
-      },
-      {
-        type: "deposit",
-        amount: 5000,
-        method: "Banorte",
-        category: "Otros",
-        note: "Pago quincenal",
-        date: new Date("2025-10-15"),
-        periodo: null
-      },
-      {
-        type: "expense",
-        amount: 1500,
-        method: "Mercado Pago",
-        category: "Entretenimiento",
-        note: "Cine y cena",
-        date: new Date("2025-10-18"),
-        periodo: obtenerPeriodoCorte(new Date("2025-10-18"), "Mercado Pago")
-      }
-    ];
-    localStorage.setItem("transactions", JSON.stringify(transactions));
-    if (DEBUG) console.log("🧪 Datos simulados cargados");
-  }
-
   updateUI();
 };
 
@@ -109,7 +62,6 @@ document.getElementById("transactionForm").onsubmit = (e) => {
   localStorage.setItem("transactions", JSON.stringify(transactions));
   updateUI();
   e.target.reset();
-  mostrarConfirmacion("✅ Transacción registrada");
 };
 
 function updateUI() {
@@ -148,7 +100,6 @@ function deleteTransaction(index) {
     transactions.splice(index, 1);
     localStorage.setItem("transactions", JSON.stringify(transactions));
     updateUI();
-    mostrarConfirmacion("🗑 Transacción eliminada");
   }
 }
 
@@ -157,7 +108,6 @@ document.getElementById("clearBtn").onclick = () => {
     transactions = [];
     localStorage.removeItem("transactions");
     updateUI();
-    mostrarConfirmacion("🧹 Historial borrado");
   }
 };
 
