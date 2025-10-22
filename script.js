@@ -41,15 +41,14 @@ function obtenerPeriodoCorte(fecha, tarjeta) {
   }
 }
 
-document.getElementById("transactionForm").onsubmit = (e) => {
+document.getElementById("formGasto").onsubmit = (e) => {
   e.preventDefault();
 
-  const type = document.getElementById("type").value;
-  const amount = parseFloat(document.getElementById("amount").value);
-  const method = document.getElementById("method").value;
-  const category = document.getElementById("category").value;
-  const dateInput = document.getElementById("date").value;
-  const note = document.getElementById("note").value;
+  const amount = parseFloat(document.getElementById("gastoAmount").value);
+  const method = document.getElementById("gastoMethod").value;
+  const category = document.getElementById("gastoCategory").value;
+  const dateInput = document.getElementById("gastoDate").value;
+  const note = document.getElementById("gastoNote").value;
   const date = dateInput ? new Date(dateInput) : new Date();
 
   let periodo = null;
@@ -57,7 +56,24 @@ document.getElementById("transactionForm").onsubmit = (e) => {
     periodo = obtenerPeriodoCorte(date, method);
   }
 
-  const nueva = { type, amount, method, category, note, date, periodo };
+  const nueva = { type: "expense", amount, method, category, note, date, periodo };
+  transactions.push(nueva);
+  localStorage.setItem("transactions", JSON.stringify(transactions));
+  updateUI();
+  e.target.reset();
+};
+
+document.getElementById("formIngreso").onsubmit = (e) => {
+  e.preventDefault();
+
+  const amount = parseFloat(document.getElementById("ingresoAmount").value);
+  const method = document.getElementById("ingresoMethod").value;
+  const category = document.getElementById("ingresoCategory").value;
+  const dateInput = document.getElementById("ingresoDate").value;
+  const note = document.getElementById("ingresoNote").value;
+  const date = dateInput ? new Date(dateInput) : new Date();
+
+  const nueva = { type: "deposit", amount, method, category, note, date };
   transactions.push(nueva);
   localStorage.setItem("transactions", JSON.stringify(transactions));
   updateUI();
@@ -68,7 +84,6 @@ function updateUI() {
   renderHistorial();
   aplicarFiltros();
   actualizarSelectorPeriodos();
-  actualizarSaldosTarjetas();
   actualizarBarrasCredito();
 }
 
@@ -146,28 +161,6 @@ document.getElementById("periodSelector").onchange = () => {
   const total = filtradas.reduce((sum, t) => sum + t.amount, 0);
   document.getElementById("totalPeriodo").textContent = total.toFixed(2);
 };
-
-function actualizarSaldosTarjetas() {
-  const saldos = {};
-  Object.keys(lineasCredito).forEach(t => saldos[t] = lineasCredito[t]);
-
-  transactions.forEach(t => {
-    if (!saldos[t.method]) saldos[t.method] = 0;
-    saldos[t.method] += t.type === "deposit" ? t.amount : -t.amount;
-  });
-
-  const lista = document.getElementById("saldosTarjetas");
-  lista.innerHTML = "";
-
-  Object.entries(saldos).forEach(([tarjeta, saldo]) => {
-    const esCredito = lineasCredito[tarjeta] !== undefined;
-    const li = document.createElement("li");
-    li.innerHTML = esCredito
-      ? `<strong>${tarjeta}</strong>: $${saldo.toFixed(2)} / $${lineasCredito[tarjeta].toFixed(2)} disponibles`
-      : `<strong>${tarjeta}</strong>: $${saldo.toFixed(2)} disponibles`;
-    lista.appendChild(li);
-  });
-}
 
 function actualizarBarrasCredito() {
   const container = document.getElementById("barrasContainer");
