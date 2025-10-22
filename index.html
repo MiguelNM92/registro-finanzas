@@ -18,7 +18,7 @@
       <h2>Registrar transacción</h2>
       <form id="transactionForm">
         <label>💼 Tipo:
-          <select id="type">
+          <select id="type" required>
             <option value="deposit">Ingreso</option>
             <option value="expense">Gasto</option>
           </select>
@@ -27,7 +27,7 @@
           <input type="number" id="amount" required />
         </label>
         <label>💳 Método de pago:
-          <select id="method">
+          <select id="method" required>
             <option value="Klar">Klar</option>
             <option value="PlataCard">PlataCard</option>
             <option value="Bradescard">Bradescard</option>
@@ -39,7 +39,7 @@
           </select>
         </label>
         <label>📂 Categoría:
-          <select id="category">
+          <select id="category" required>
             <option value="Comida">Comida</option>
             <option value="Servicios">Servicios</option>
             <option value="Transporte">Transporte</option>
