@@ -4,7 +4,6 @@ const lineasCredito = {
   "PlataCard": 11500,
   "Mercado Pago": 22800,
   "Bradescard": 34160
-  "Crédito Klar": 35569.86
 };
 
 const fechasCorte = {
