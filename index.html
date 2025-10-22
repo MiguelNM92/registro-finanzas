@@ -15,76 +15,57 @@
 
   <main class="grid">
     <section id="formSection">
-      <h2>Registrar gasto</h2>
       <form id="formGasto">
-        <label>💰 Monto:
-          <input type="number" id="gastoAmount" required />
-        </label>
-        <label>💳 Método de pago:
-          <select id="gastoMethod" required>
-            <option value="Klar">Klar</option>
-            <option value="PlataCard">PlataCard</option>
-            <option value="Bradescard">Bradescard</option>
-            <option value="Mercado Pago">Mercado Pago</option>
-            <option value="Banorte">Banorte</option>
-            <option value="UpsiVale">UpsiVale</option>
-            <option value="Efectivo">Efectivo</option>
-            <option value="Transferencia">Transferencia</option>
-          </select>
-        </label>
-        <label>📂 Categoría:
-          <select id="gastoCategory" required>
-            <option value="Comida">Comida</option>
-            <option value="Servicios">Servicios</option>
-            <option value="Transporte">Transporte</option>
-            <option value="Entretenimiento">Entretenimiento</option>
-            <option value="Salud">Salud</option>
-            <option value="Educación">Educación</option>
-            <option value="Ropa">Ropa</option>
-            <option value="Mascotas">Mascotas</option>
-            <option value="Viajes">Viajes</option>
-            <option value="Otros">Otros</option>
-          </select>
-        </label>
-        <label>📅 Fecha:
-          <input type="date" id="gastoDate" />
-        </label>
-        <label>📝 Descripción:
-          <input type="text" id="gastoNote" />
-        </label>
+        <h2>Registrar gasto</h2>
+        <label>Monto:<input type="number" id="gastoAmount" required /></label>
+        <label>Método:<select id="gastoMethod" required>
+          <option value="Klar">Klar</option>
+          <option value="PlataCard">PlataCard</option>
+          <option value="Bradescard">Bradescard</option>
+          <option value="Mercado Pago">Mercado Pago</option>
+          <option value="Banorte">Banorte</option>
+          <option value="UpsiVale">UpsiVale</option>
+          <option value="Efectivo">Efectivo</option>
+          <option value="Transferencia">Transferencia</option>
+        </select></label>
+        <label>Categoría:<select id="gastoCategory" required>
+          <option value="Comida">Comida</option>
+          <option value="Servicios">Servicios</option>
+          <option value="Transporte">Transporte</option>
+          <option value="Entretenimiento">Entretenimiento</option>
+          <option value="Salud">Salud</option>
+          <option value="Educación">Educación</option>
+          <option value="Ropa">Ropa</option>
+          <option value="Mascotas">Mascotas</option>
+          <option value="Viajes">Viajes</option>
+          <option value="Otros">Otros</option>
+        </select></label>
+        <label>Fecha:<input type="date" id="gastoDate" /></label>
+        <label>Descripción:<input type="text" id="gastoNote" /></label>
         <button type="submit">Guardar gasto</button>
       </form>
 
-      <h2>Registrar ingreso</h2>
       <form id="formIngreso">
-        <label>💰 Monto:
-          <input type="number" id="ingresoAmount" required />
-        </label>
-        <label>💳 Método de ingreso:
-          <select id="ingresoMethod" required>
-            <option value="Banorte">Banorte</option>
-            <option value="Transferencia">Transferencia</option>
-            <option value="Efectivo">Efectivo</option>
-            <option value="UpsiVale">UpsiVale</option>
-          </select>
-        </label>
-        <label>📂 Categoría:
-          <select id="ingresoCategory" required>
-            <option value="Sueldo">Sueldo</option>
-            <option value="Venta">Venta</option>
-            <option value="Reembolso">Reembolso</option>
-            <option value="Otros">Otros</option>
-          </select>
-        </label>
-        <label>📅 Fecha:
-          <input type="date" id="ingresoDate" />
-        </label>
-        <label>📝 Descripción:
-          <input type="text" id="ingresoNote" />
-        </label>
+        <h2>Registrar ingreso</h2>
+        <label>Monto:<input type="number" id="ingresoAmount" required /></label>
+        <label>Método:<select id="ingresoMethod" required>
+          <option value="Banorte">Banorte</option>
+          <option value="Transferencia">Transferencia</option>
+          <option value="Efectivo">Efectivo</option>
+          <option value="UpsiVale">UpsiVale</option>
+        </select></label>
+        <label>Categoría:<select id="ingresoCategory" required>
+          <option value="Sueldo">Sueldo</option>
+          <option value="Venta">Venta</option>
+          <option value="Reembolso">Reembolso</option>
+          <option value="Otros">Otros</option>
+        </select></label>
+        <label>Fecha:<input type="date" id="ingresoDate" /></label>
+        <label>Descripción:<input type="text" id="ingresoNote" /></label>
         <button type="submit">Guardar ingreso</button>
       </form>
     </section>
+
     <section id="barrasCredito">
       <h3>Consumo de tarjetas de crédito</h3>
       <div id="barrasContainer"></div>
@@ -101,50 +82,43 @@
     <section id="advancedFilter">
       <h3>Filtrar por categoría o método</h3>
       <div class="filtrosHorizontales">
-        <label>Categoría:
-          <select id="categoryFilter">
-            <option value="">-- Todas --</option>
-            <option value="Comida">Comida</option>
-            <option value="Servicios">Servicios</option>
-            <option value="Transporte">Transporte</option>
-            <option value="Entretenimiento">Entretenimiento</option>
-            <option value="Salud">Salud</option>
-            <option value="Educación">Educación</option>
-            <option value="Ropa">Ropa</option>
-            <option value="Mascotas">Mascotas</option>
-            <option value="Viajes">Viajes</option>
-            <option value="Otros">Otros</option>
-            <option value="Sueldo">Sueldo</option>
-            <option value="Venta">Venta</option>
-            <option value="Reembolso">Reembolso</option>
-          </select>
-        </label>
-        <label>Método de pago:
-          <select id="methodFilter">
-            <option value="">-- Todos --</option>
-            <option value="Klar">Klar</option>
-            <option value="PlataCard">PlataCard</option>
-            <option value="Bradescard">Bradescard</option>
-            <option value="Mercado Pago">Mercado Pago</option>
-            <option value="Banorte">Banorte</option>
-            <option value="UpsiVale">UpsiVale</option>
-            <option value="Efectivo">Efectivo</option>
-            <option value="Transferencia">Transferencia</option>
-          </select>
-        </label>
+        <label>Categoría:<select id="categoryFilter">
+          <option value="">-- Todas --</option>
+          <option value="Comida">Comida</option>
+          <option value="Servicios">Servicios</option>
+          <option value="Transporte">Transporte</option>
+          <option value="Entretenimiento">Entretenimiento</option>
+          <option value="Salud">Salud</option>
+          <option value="Educación">Educación</option>
+          <option value="Ropa">Ropa</option>
+          <option value="Mascotas">Mascotas</option>
+          <option value="Viajes">Viajes</option>
+          <option value="Otros">Otros</option>
+          <option value="Sueldo">Sueldo</option>
+          <option value="Venta">Venta</option>
+          <option value="Reembolso">Reembolso</option>
+        </select></label>
+        <label>Método:<select id="methodFilter">
+          <option value="">-- Todos --</option>
+          <option value="Klar">Klar</option>
+          <option value="PlataCard">PlataCard</option>
+          <option value="Bradescard">Bradescard</option>
+          <option value="Mercado Pago">Mercado Pago</option>
+          <option value="Banorte">Banorte</option>
+          <option value="UpsiVale">UpsiVale</option>
+          <option value="Efectivo">Efectivo</option>
+          <option value="Transferencia">Transferencia</option>
+        </select></label>
       </div>
       <p>Total filtrado: $<span id="totalFiltrado">0.00</span></p>
     </section>
 
     <details id="transactions">
       <summary><h3>Historial de transacciones</h3></summary>
-
       <h4>📈 Ingresos</h4>
       <ul id="listaIngresos"></ul>
-
       <h4>📉 Gastos</h4>
       <ul id="listaGastos"></ul>
-
       <button id="clearBtn">🧹 Limpiar historial</button>
     </details>
   </main>
