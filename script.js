@@ -83,8 +83,11 @@ function updateUI() {
 }
 
 function renderHistorial() {
-  const list = document.getElementById("transactionList");
-  list.innerHTML = "";
+  const ingresos = document.getElementById("listaIngresos");
+  const gastos = document.getElementById("listaGastos");
+  ingresos.innerHTML = "";
+  gastos.innerHTML = "";
+
   transactions.forEach((t, index) => {
     const item = document.createElement("li");
     item.className = `transaction ${t.type}`;
@@ -98,7 +101,7 @@ function renderHistorial() {
         <button class="deleteBtn" onclick="deleteTransaction(${index})">🗑</button>
       </div>
     `;
-    list.appendChild(item);
+    t.type === "deposit" ? ingresos.appendChild(item) : gastos.appendChild(item);
   });
   if (DEBUG) console.log("📋 Historial actualizado");
 }
@@ -215,7 +218,4 @@ function mostrarConfirmacion(texto) {
   confirm.style.left = "50%";
   confirm.style.transform = "translateX(-50%)";
   confirm.style.background = "#22c55e";
-  confirm.style.color = "white";
-  confirm.style.padding = "10px 20px";
-  confirm.style.borderRadius = "6px";
-  confirm.style.boxShadow = "0
+  confirm.style
