@@ -17,7 +17,7 @@
     <section id="formSection">
       <form id="formGasto">
         <h2>Registrar gasto</h2>
-        <label>Monto:<input type="number" id="gastoAmount" required /></label>
+        <label>Monto:<input type="number" id="gastoAmount" step="0.01" required /></label>
         <label>Método:<select id="gastoMethod" required>
           <option value="Klar">Klar</option>
           <option value="PlataCard">PlataCard</option>
@@ -47,7 +47,7 @@
 
       <form id="formIngreso">
         <h2>Registrar ingreso</h2>
-        <label>Monto:<input type="number" id="ingresoAmount" required /></label>
+        <label>Monto:<input type="number" id="ingresoAmount" step="0.01" required /></label>
         <label>Método:<select id="ingresoMethod" required>
           <option value="Banorte">Banorte</option>
           <option value="Transferencia">Transferencia</option>
