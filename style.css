@@ -2,12 +2,12 @@ body {
   font-family: system-ui, sans-serif;
   margin: 0;
   padding: 0;
-  background: #f9fafb;
-  color: #111;
+  background: #0f172a;
+  color: #f1f5f9;
 }
 
 header {
-  background: #0f172a;
+  background: #1e293b;
   color: white;
   padding: 1em;
   text-align: center;
@@ -20,10 +20,24 @@ header img#logo {
 }
 
 main.grid {
-  display: grid;
-  grid-template-columns: 1fr 300px;
+  display: flex;
+  flex-direction: column;
   gap: 2em;
   padding: 2em;
+}
+
+#formSection {
+  display: flex;
+  gap: 2em;
+  flex-wrap: wrap;
+}
+
+#formSection form {
+  flex: 1;
+  min-width: 280px;
+  background: #1e293b;
+  padding: 1em;
+  border-radius: 8px;
 }
 
 form label {
@@ -36,12 +50,14 @@ form select {
   width: 100%;
   padding: 6px;
   margin-top: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid #94a3b8;
   border-radius: 4px;
+  background: #0f172a;
+  color: white;
 }
 
 form button {
-  background: #2563eb;
+  background: #22c55e;
   color: white;
   padding: 10px;
   border: none;
@@ -51,19 +67,7 @@ form button {
 }
 
 form button:hover {
-  background: #1d4ed8;
-}
-
-aside#tarjetas ul {
-  list-style: none;
-  padding: 0;
-}
-
-aside#tarjetas li {
-  background: #e2e8f0;
-  margin-bottom: 6px;
-  padding: 8px;
-  border-radius: 6px;
+  background: #16a34a;
 }
 
 section#barrasCredito {
@@ -84,7 +88,7 @@ section#barrasCredito {
   height: 20px;
   border-radius: 10px;
   overflow: hidden;
-  background: #ddd;
+  background: #334155;
 }
 
 .barraUsado {
@@ -121,7 +125,7 @@ ul#listaGastos {
 }
 
 .transaction {
-  background: #f1f5f9;
+  background: #1e293b;
   margin-bottom: 6px;
   padding: 8px;
   border-radius: 6px;
@@ -146,7 +150,7 @@ ul#listaGastos {
   border: none;
   font-size: 1.2em;
   cursor: pointer;
-  color: #dc2626;
+  color: #ef4444;
 }
 
 #clearBtn {
@@ -156,4 +160,10 @@ ul#listaGastos {
 
 #clearBtn:hover {
   background: #b91c1c;
+}
+
+@media (max-width: 768px) {
+  #formSection {
+    flex-direction: column;
+  }
 }
