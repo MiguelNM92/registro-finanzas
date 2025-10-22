@@ -16,45 +16,60 @@ const fechasCorte = {
 };
 
 window.onload = () => {
-  if (DEBUG) console.log("🟢 Cargando transacciones desde localStorage...");
   const saved = localStorage.getItem("transactions");
   if (saved) {
     try {
       transactions = JSON.parse(saved);
       if (DEBUG) console.log("✅ Transacciones cargadas:", transactions);
-    } catch (e) {
-      console.error("❌ Error al cargar transacciones:", e);
+    } catch {
       transactions = [];
     }
   }
-  updateUI();
-};
 
-document.getElementById("transactionForm").onsubmit = (e) => {
-  e.preventDefault();
-  if (DEBUG) console.log("📥 Guardando nueva transacción...");
-
-  const type = document.getElementById("type").value;
-  const amount = parseFloat(document.getElementById("amount").value);
-  const method = document.getElementById("method").value;
-  const category = document.getElementById("category").value;
-  const dateInput = document.getElementById("date").value;
-  const note = document.getElementById("note").value;
-  const date = dateInput ? new Date(dateInput) : new Date();
-
-  let periodo = null;
-  if (fechasCorte[method]) {
-    periodo = obtenerPeriodoCorte(date, method);
+  if (!saved || transactions.length === 0) {
+    transactions = [
+      {
+        type: "expense",
+        amount: 1200,
+        method: "Klar",
+        category: "Comida",
+        note: "Supermercado",
+        date: new Date("2025-10-10"),
+        periodo: obtenerPeriodoCorte(new Date("2025-10-10"), "Klar")
+      },
+      {
+        type: "expense",
+        amount: 800,
+        method: "PlataCard",
+        category: "Transporte",
+        note: "Gasolina",
+        date: new Date("2025-10-12"),
+        periodo: obtenerPeriodoCorte(new Date("2025-10-12"), "PlataCard")
+      },
+      {
+        type: "deposit",
+        amount: 5000,
+        method: "Banorte",
+        category: "Otros",
+        note: "Pago quincenal",
+        date: new Date("2025-10-15"),
+        periodo: null
+      },
+      {
+        type: "expense",
+        amount: 1500,
+        method: "Mercado Pago",
+        category: "Entretenimiento",
+        note: "Cine y cena",
+        date: new Date("2025-10-18"),
+        periodo: obtenerPeriodoCorte(new Date("2025-10-18"), "Mercado Pago")
+      }
+    ];
+    localStorage.setItem("transactions", JSON.stringify(transactions));
+    if (DEBUG) console.log("🧪 Datos simulados cargados");
   }
 
-  const nueva = { type, amount, method, category, note, date, periodo };
-  transactions.push(nueva);
-  localStorage.setItem("transactions", JSON.stringify(transactions));
-  if (DEBUG) console.log("✅ Transacción registrada:", nueva);
-
   updateUI();
-  e.target.reset();
-  mostrarConfirmacion("✅ Transacción registrada");
 };
 
 function obtenerPeriodoCorte(fecha, tarjeta) {
@@ -73,8 +88,31 @@ function obtenerPeriodoCorte(fecha, tarjeta) {
   }
 }
 
+document.getElementById("transactionForm").onsubmit = (e) => {
+  e.preventDefault();
+
+  const type = document.getElementById("type").value;
+  const amount = parseFloat(document.getElementById("amount").value);
+  const method = document.getElementById("method").value;
+  const category = document.getElementById("category").value;
+  const dateInput = document.getElementById("date").value;
+  const note = document.getElementById("note").value;
+  const date = dateInput ? new Date(dateInput) : new Date();
+
+  let periodo = null;
+  if (fechasCorte[method]) {
+    periodo = obtenerPeriodoCorte(date, method);
+  }
+
+  const nueva = { type, amount, method, category, note, date, periodo };
+  transactions.push(nueva);
+  localStorage.setItem("transactions", JSON.stringify(transactions));
+  updateUI();
+  e.target.reset();
+  mostrarConfirmacion("✅ Transacción registrada");
+};
+
 function updateUI() {
-  if (DEBUG) console.log("🔄 Actualizando interfaz...");
   renderHistorial();
   aplicarFiltros();
   actualizarSelectorPeriodos();
@@ -103,7 +141,6 @@ function renderHistorial() {
     `;
     t.type === "deposit" ? ingresos.appendChild(item) : gastos.appendChild(item);
   });
-  if (DEBUG) console.log("📋 Historial actualizado");
 }
 
 function deleteTransaction(index) {
@@ -111,7 +148,7 @@ function deleteTransaction(index) {
     transactions.splice(index, 1);
     localStorage.setItem("transactions", JSON.stringify(transactions));
     updateUI();
-    if (DEBUG) console.log("🗑 Transacción eliminada");
+    mostrarConfirmacion("🗑 Transacción eliminada");
   }
 }
 
@@ -121,7 +158,6 @@ document.getElementById("clearBtn").onclick = () => {
     localStorage.removeItem("transactions");
     updateUI();
     mostrarConfirmacion("🧹 Historial borrado");
-    if (DEBUG) console.log("🧹 Todas las transacciones eliminadas");
   }
 };
 
@@ -140,7 +176,6 @@ function aplicarFiltros() {
 
   const total = filtradas.reduce((sum, t) => t.type === "deposit" ? sum + t.amount : sum - t.amount, 0);
   document.getElementById("totalFiltrado").textContent = total.toFixed(2);
-  if (DEBUG) console.log("🔍 Filtro aplicado:", { categoria, metodo, total });
 }
 
 function actualizarSelectorPeriodos() {
@@ -153,7 +188,6 @@ function actualizarSelectorPeriodos() {
     option.textContent = p;
     selector.appendChild(option);
   });
-  if (DEBUG) console.log("📅 Periodos actualizados:", periodos);
 }
 
 document.getElementById("periodSelector").onchange = () => {
@@ -161,7 +195,6 @@ document.getElementById("periodSelector").onchange = () => {
   const filtradas = transactions.filter(t => t.periodo === periodo && t.type === "expense");
   const total = filtradas.reduce((sum, t) => sum + t.amount, 0);
   document.getElementById("totalPeriodo").textContent = total.toFixed(2);
-  if (DEBUG) console.log("📊 Total en periodo:", periodo, total);
 };
 
 function actualizarSaldosTarjetas() {
@@ -184,8 +217,6 @@ function actualizarSaldosTarjetas() {
       : `<strong>${tarjeta}</strong>: $${saldo.toFixed(2)} disponibles`;
     lista.appendChild(li);
   });
-
-  if (DEBUG) console.log("💳 Saldos actualizados:", saldos);
 }
 
 function actualizarBarrasCredito() {
@@ -206,8 +237,6 @@ function actualizarBarrasCredito() {
     `;
     container.appendChild(barra);
   });
-
-  if (DEBUG) console.log("📈 Barras de consumo actualizadas");
 }
 
 function mostrarConfirmacion(texto) {
@@ -218,4 +247,12 @@ function mostrarConfirmacion(texto) {
   confirm.style.left = "50%";
   confirm.style.transform = "translateX(-50%)";
   confirm.style.background = "#22c55e";
-  confirm.style
+  confirm.style.color = "white";
+  confirm.style.padding = "10px 20px";
+  confirm.style.borderRadius = "8px";
+  confirm.style.fontWeight = "bold";
+  confirm.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
+  confirm.style.zIndex = "999";
+  document.body.appendChild(confirm);
+  setTimeout(() => confirm.remove(), 3000);
+}
