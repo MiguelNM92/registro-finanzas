@@ -39,7 +39,7 @@ aside {
   margin-bottom: 30px;
 }
 
-h2, h3 {
+h2, h3, h4 {
   color: #22d3ee;
   margin-bottom: 12px;
 }
@@ -134,30 +134,4 @@ details summary {
   margin-bottom: 8px;
   padding: 6px;
   background-color: #334155;
-  border-radius: 6px;
-}
-
-#barrasContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.barraTarjeta {
-  background-color: #334155;
-  border-radius: 6px;
-  padding: 6px;
-}
-
-.barraTarjeta span {
-  display: block;
-  margin-bottom: 4px;
-  font-weight: bold;
-}
-
-.barraTarjeta .progreso {
-  height: 12px;
-  background-color: #22c55e;
-  border-radius: 6px;
-  transition: width 0.3s ease;
-}
+  border-radius:
