@@ -174,16 +174,26 @@ function actualizarBarrasCredito() {
   container.innerHTML = "";
 
   Object.keys(lineasCredito).forEach(tarjeta => {
+    const creditoTotal = lineasCredito[tarjeta];
     const gastos = transactions
       .filter(t => t.method === tarjeta && t.type === "expense")
       .reduce((sum, t) => sum + t.amount, 0);
 
-    const porcentaje = Math.min((gastos / lineasCredito[tarjeta]) * 100, 100);
+    const disponible = creditoTotal - gastos;
+    const porcentajeUsado = Math.min((gastos / creditoTotal) * 100, 100);
+    const porcentajeDisponible = 100 - porcentajeUsado;
+
     const barra = document.createElement("div");
     barra.className = "barraTarjeta";
     barra.innerHTML = `
-      <span>${tarjeta}: ${porcentaje.toFixed(1)}% usado</span>
-      <div class="progreso" style="width:${porcentaje}%"></div>
+      <div class="infoTarjeta">
+        <strong>${tarjeta}</strong> — $${gastos.toFixed(2)} usado / $${disponible.toFixed(2)} disponible
+        <br>${porcentajeUsado.toFixed(1)}% usado / ${porcentajeDisponible.toFixed(1)}% disponible
+      </div>
+      <div class="barraFondo">
+        <div class="barraUsado" style="width:${porcentajeUsado}%"></div>
+        <div class="barraDisponible" style="width:${porcentajeDisponible}%"></div>
+      </div>
     `;
     container.appendChild(barra);
   });
